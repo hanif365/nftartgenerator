@@ -66,17 +66,17 @@ const Layers = () => {
     }
 
     // Complete layers
-    const checkLayer = (checkedOrNot, id) => {
-
+    const checkLayer = (checkedOrNot, id, layer) => {
         console.log("Complete layers: ", checkedOrNot);
         console.log("Complete layers ID : ", id);
-
+        console.log(layer);
     }
 
     // Store Data in Local Storage
     useEffect(() => {
         localStorage.setItem('todoLayers', JSON.stringify(layers))
     }, [layers])
+    
     return (
         <div className='container-fluid py-5 todoContainer'>
             <div className="">
@@ -98,7 +98,7 @@ const Layers = () => {
                             layers.map((layer, index) => {
                                 return (
                                     <div className=' my-2 ' key={index}>
-                                        <a href="#" className="list-group-item list-group-item-action list-group-item-primary d-flex justify-content-between show-field"><span><input className="form-check-input" type="radio" name="flexRadioDefault" id={index} onChange={(e) => checkLayer(e.target.checked, index)}></input> {layer}</span> <span><FontAwesomeIcon icon={faTrash} className="inner-fw-delete" onClick={() => deleteLayer(index)} /> </span></a>
+                                        <a href="#" className="list-group-item list-group-item-action list-group-item-primary d-flex justify-content-between show-field"><span><input className="form-check-input" type="radio" name="flexRadioDefault" id={index} onChange={(e) => checkLayer(e.target.checked, index, layer)}></input> {layer}</span> <span><FontAwesomeIcon icon={faTrash} className="inner-fw-delete" onClick={() => deleteLayer(index)} /> </span></a>
                                     </div>
                                 )
                             })

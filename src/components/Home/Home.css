@@ -1,0 +1,18 @@
+.upload-layer-images-div{
+
+}
+.addLayerImgBtn{
+  border: 5px solid #BACBE6;
+  border-radius: 5px;
+  margin: 50px 0;
+}
+.image-item{
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  
+}
+.image-item-inner{
+  background-color: #BACBE6;
+  margin: 5px;
+}
