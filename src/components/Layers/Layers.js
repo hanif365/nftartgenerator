@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import './Layers.css';
 // import todoLogo from '../../Assets/Images/todoLogo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenToSquare, faSquarePlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { LayerContext } from '../../App';
 
 
 // Get Data from Local Storage
@@ -20,6 +21,7 @@ const getLocalLayers = () => {
 
 
 const Layers = () => {
+    const [selectedLayer, setSelectedLayer] = useContext(LayerContext);
     const [inputData, setInputData] = useState("");
     const [layers, setLayers] = useState(getLocalLayers());
 
@@ -70,6 +72,7 @@ const Layers = () => {
         console.log("Complete layers: ", checkedOrNot);
         console.log("Complete layers ID : ", id);
         console.log(layer);
+        setSelectedLayer(layer);
     }
 
     // Store Data in Local Storage

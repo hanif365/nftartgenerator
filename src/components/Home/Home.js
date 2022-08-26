@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import ImageUploading from 'react-images-uploading';
 import mergeImages from 'merge-images';
 import { saveAs } from 'file-saver';
@@ -9,57 +9,102 @@ import { faCamera } from '@fortawesome/free-solid-svg-icons';
 
 // indexedDB
 import Localbase from 'localbase';
+import { LayerContext } from '../../App';
 let db = new Localbase('db');
 
-// Get Data from Local Storage
-// const getLocalImages = () => {
-//   let images = localStorage.getItem('testImages');
-//   // console.log(images);
-
-//   if (images) {
-//     return JSON.parse(images);
-//   } else {
-//     return [];
-//   }
-// }
-
 const Home = () => {
+    const [selectedLayer, setSelectedLayer] = useContext(LayerContext);
+    console.log("selectedLayer : ", selectedLayer);
+    const [reload, setReload] = useState(false);
+
     const [images, setImages] = useState([]);
     // const [images, setImages] = useState(getLocalImages());
     const maxNumber = 100;
     const [combined, setcombineimages] = useState();
 
-
     const onChange = async (imageList, addUpdateIndex) => {
         // data for submit
         // console.log(imageList, addUpdateIndex);
+
         console.log(imageList);
+        console.log(addUpdateIndex);
+
+        let newUploadImageStore = [];
+
+        for (let i = 0; i < addUpdateIndex.length; i++) {
+            console.log(imageList[addUpdateIndex[i]]);
+            newUploadImageStore.push(imageList[addUpdateIndex[i]])
+        }
+
+        // const uploadImg = imageList.filter(imgs => {
+        //     console.log(addUpdateIndex[0]);
+
+        //     for (let i = 0; i < addUpdateIndex.length; i++) {
+        //         console.log(imageList[addUpdateIndex[i]]);
+        //         newUploadImageStore.push(imageList[addUpdateIndex[i]])
+        //     }
+
+        //     console.log(imageList[addUpdateIndex[0]]);
+        //     return (imgs)
+
+        // })
+        // console.log(uploadImg);
+
+        console.log(newUploadImageStore);
+
         // setImages(imageList);
 
         // indexedDB
-        await db.collection('users').add({ imageList })
-        setImages(imageList);
+        console.log(selectedLayer);
+        console.log(images);
+
+        // setReload(!reload);
+
+        const newImageGroup = newUploadImageStore.concat(...images)
+        console.log(newImageGroup);
+
+
+
+        await db.collection(selectedLayer).add({ newImageGroup })
+        // await db.collection(selectedLayer).add({newUploadImageStore})
+
+        // setReload(!reload);
+        setReload(!reload);
+
+        // setImages(newUploadImageStore);
+
+        // empty image list after each insertion
+        // imageList = [];
+        // console.log(imageList);
+
     };
 
     useEffect(() => {
-        db.collection('users').get().then(users => {
-            console.log("ALl users : ", users);
-            console.log(users[users.length - 1].imageList)
-            setImages(users[users.length - 1].imageList);
-        })
-    }, [])
+        db.collection(selectedLayer).get().then(selectedLayer => {
+            console.log("ALl selectedLayer : ", selectedLayer);
+            console.log(selectedLayer.length);
 
+            // console.log(selectedLayer[selectedLayer.length - 1].newUploadImageStore);
+            // setImages(selectedLayer[selectedLayer.length - 1].newUploadImageStore);
+
+            // working
+            // console.log(selectedLayer[selectedLayer.length - 1].newImageGroup);
+            // setImages(selectedLayer[selectedLayer.length - 1].newImageGroup);
+
+            if (selectedLayer.length == 0) {
+                setImages([])
+            }
+            else {
+                console.log(selectedLayer[selectedLayer.length - 1].newImageGroup);
+                setImages(selectedLayer[selectedLayer.length - 1].newImageGroup);
+            }
+
+
+        })
+    }, [selectedLayer, reload])
 
     console.log(typeof (images));
     console.log(images);
-
-    // Store Data in Local Storage
-    // useEffect(() => {
-    //   localStorage.setItem('testImages', JSON.stringify(images))
-    // }, [images])
-
-    // console.log(images.length);
-
 
     const combine = () => {
         mergeImages([
@@ -117,7 +162,7 @@ const Home = () => {
 
 
                                     <div className="image-item">
-                                        {imageList.map((image, index) => (
+                                        {images && images.map((image, index) => (
                                             <div key={index} className="image-item-inner">
                                                 <img src={image['data_url']} alt="" width="100" />
                                                 <div className="">
@@ -130,7 +175,7 @@ const Home = () => {
 
 
                                     <div className='my-5'>
-                                        {imageList.length ? <button className='btn btn-danger' onClick={onImageRemoveAll}>Remove all images</button> : ' '}
+                                        {images && images.length ? <button className='btn btn-danger' onClick={onImageRemoveAll}>Remove all images</button> : ' '}
                                     </div>
                                 </div>
                             )}
