@@ -146,13 +146,15 @@ const Home = () => {
 
                                     <div className="image-item">
                                         {images && images.map((image, index) => (
-                                            <div key={index} className="image-item-inner">
-                                                <img src={image['data_url']} alt="" width="100" />
-                                                <div className="">
+                                            <div key={index} class="card image-card">
+                                                <img src={image['data_url']} class="card-img-top" alt="..." />
+                                                <div class="">
+                                                    <p class="card-text">test</p>
                                                     {/* <button className='btn btn-sm btn-primary me-3 mt-2' onClick={() => onImageUpdate(index)}>Update</button> */}
-                                                    <button className='btn btn-sm btn-warning mt-2' onClick={() => onImageRemove(index)}>Remove</button>
+                                                    <button className='btn px-5 btn-warning mb-2' onClick={() => onImageRemove(index)}>Remove</button>
                                                 </div>
                                             </div>
+
                                         ))}
                                     </div>
 
@@ -172,8 +174,8 @@ const Home = () => {
                 <div className="col-md-3"></div>
 
 
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 
