@@ -10,7 +10,7 @@ import { faCamera } from '@fortawesome/free-solid-svg-icons';
 // indexedDB
 import Localbase from 'localbase';
 import { LayerContext } from '../../App';
-let db = new Localbase('db');
+let db = new Localbase('nftartDB');
 
 const Home = () => {
     const [selectedLayer, setSelectedLayer] = useContext(LayerContext);
@@ -18,15 +18,18 @@ const Home = () => {
     const [reload, setReload] = useState(false);
 
     const [images, setImages] = useState([]);
-    // const [images, setImages] = useState(getLocalImages());
     const maxNumber = 100;
     const [combined, setcombineimages] = useState();
 
     const onChange = async (imageList, addUpdateIndex) => {
-        // data for submit
-        // console.log(imageList, addUpdateIndex);
 
         console.log(imageList);
+        console.log(addUpdateIndex);
+
+        // code used for remove an image
+        // here we set addUpdateIndex value 0 if it was undefined
+        addUpdateIndex = addUpdateIndex ? addUpdateIndex : 0;
+
         console.log(addUpdateIndex);
 
         let newUploadImageStore = [];
@@ -36,47 +39,27 @@ const Home = () => {
             newUploadImageStore.push(imageList[addUpdateIndex[i]])
         }
 
-        // const uploadImg = imageList.filter(imgs => {
-        //     console.log(addUpdateIndex[0]);
-
-        //     for (let i = 0; i < addUpdateIndex.length; i++) {
-        //         console.log(imageList[addUpdateIndex[i]]);
-        //         newUploadImageStore.push(imageList[addUpdateIndex[i]])
-        //     }
-
-        //     console.log(imageList[addUpdateIndex[0]]);
-        //     return (imgs)
-
-        // })
-        // console.log(uploadImg);
-
         console.log(newUploadImageStore);
-
-        // setImages(imageList);
-
-        // indexedDB
         console.log(selectedLayer);
         console.log(images);
 
-        // setReload(!reload);
+        let newImageGroup;
 
-        const newImageGroup = newUploadImageStore.concat(...images)
+        // condition check for remove operation (we set if addUpdateIndex is undefined then it value will be 0)
+        //  when we delete an image then we get updated list from imageList
+        if (addUpdateIndex == 0) {
+            // newImageGroup = newUploadImageStore.concat(...imageList)
+            newImageGroup = imageList;
+        }
+        else {
+            newImageGroup = newUploadImageStore.concat(...images);
+        }
         console.log(newImageGroup);
 
 
-
         await db.collection(selectedLayer).add({ newImageGroup })
-        // await db.collection(selectedLayer).add({newUploadImageStore})
 
-        // setReload(!reload);
         setReload(!reload);
-
-        // setImages(newUploadImageStore);
-
-        // empty image list after each insertion
-        // imageList = [];
-        // console.log(imageList);
-
     };
 
     useEffect(() => {
@@ -166,7 +149,7 @@ const Home = () => {
                                             <div key={index} className="image-item-inner">
                                                 <img src={image['data_url']} alt="" width="100" />
                                                 <div className="">
-                                                    <button className='btn btn-sm btn-primary me-3 mt-2' onClick={() => onImageUpdate(index)}>Update</button>
+                                                    {/* <button className='btn btn-sm btn-primary me-3 mt-2' onClick={() => onImageUpdate(index)}>Update</button> */}
                                                     <button className='btn btn-sm btn-warning mt-2' onClick={() => onImageRemove(index)}>Remove</button>
                                                 </div>
                                             </div>
