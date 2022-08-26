@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+
 function getRandom (weights) {
     // weights = [0.3, 0.3, 0.3, 0.1]
     var num = Math.random(),
@@ -15,5 +16,3 @@ function getRandom (weights) {
 
     return lastIndex + 1;
 };
-
-

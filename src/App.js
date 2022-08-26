@@ -5,14 +5,23 @@ import ImageUploading from 'react-images-uploading';
 import mergeImages from 'merge-images';
 import { saveAs } from 'file-saver';
 import Layers from './components/Layers/Layers';
+import MultiSlider from './components/Multislider';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
+
+import Modal from "react-bootstrap/Modal";
+import {Container,Row,Col} from "react-bootstrap"
+
+const data = ["Red hat", "Blue hat", "Green hat", "Black hat"]
 
 function App() {
   const [images, setImages] = useState([]);
   const maxNumber = 100;
   const [combined, setcombineimages] = useState();
+  const [rarityModalShow,setRarityModalShow] = useState(false) 
+
+  const modalclose=()=>{setRarityModalShow(false)}
 
   const onChange = (imageList, addUpdateIndex) => {
     // data for submit
@@ -36,6 +45,10 @@ function App() {
 
   const download = () => {
     saveAs(combined, 'image.jpg') // Put your image url here.
+  }
+
+  const showmodal = () => {
+    setRarityModalShow(true)
   }
 
   return (
@@ -100,11 +113,30 @@ function App() {
           <button onClick={combine}> combine</button>
           <img width="100" src={combined}></img>
           <button onClick={download}> download</button>
+          <button onClick={showmodal}>Rarity</button>
         </div>
         <div className="col-md-3"></div>
 
 
       </div>
+
+      <Modal 
+        dialogClassName ="modala"
+        show={rarityModalShow}
+        onHide={modalclose}
+        backdrop="static"
+        keyboard={false}
+        centered>
+          <Modal.Header closeButton closeVariant='black' style={{height:"10px"}}>
+                <Modal.Title>Rarity Settings</Modal.Title>
+          </Modal.Header>
+          <Modal.Body style={{marginTop:"-10px"}}>
+            <Container>
+              <MultiSlider Sliders = {data}/>
+            </Container>
+          </Modal.Body>
+        </Modal>
+
     </div>
   );
 }
