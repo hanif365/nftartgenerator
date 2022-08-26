@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
 import ImageUploading from 'react-images-uploading';
 import mergeImages from 'merge-images';
 import { saveAs } from 'file-saver';
@@ -20,8 +20,13 @@ function App() {
   const maxNumber = 100;
   const [combined, setcombineimages] = useState();
   const [rarityModalShow,setRarityModalShow] = useState(false) 
+  const [values, setValues] = useState([])
 
   const modalclose=()=>{setRarityModalShow(false)}
+
+  useEffect(()=>{
+    console.log(values)
+  },[values])
 
   const onChange = (imageList, addUpdateIndex) => {
     // data for submit
@@ -126,13 +131,14 @@ function App() {
         onHide={modalclose}
         backdrop="static"
         keyboard={false}
+        size="lg"
         centered>
-          <Modal.Header closeButton closeVariant='black' style={{height:"10px"}}>
+          <Modal.Header closeButton closeVariant='black' style={{height:"70px"}}>
                 <Modal.Title>Rarity Settings</Modal.Title>
           </Modal.Header>
           <Modal.Body style={{marginTop:"-10px"}}>
             <Container>
-              <MultiSlider Sliders = {data}/>
+              <MultiSlider Items = {data} sendValues = {setValues}/>
             </Container>
           </Modal.Body>
         </Modal>
