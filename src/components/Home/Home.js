@@ -9,7 +9,7 @@ import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import MultiSlider from '../Multislider';
 
 import Modal from "react-bootstrap/Modal";
-import {Container,Row,Col} from "react-bootstrap"
+import { Container, Row, Col } from "react-bootstrap"
 
 // indexedDB
 import Localbase from 'localbase';
@@ -20,7 +20,7 @@ const Home = () => {
     const [allLayers, setAllLayers] = useContext(ALLLayerContext);
     const [selectedLayer, setSelectedLayer] = useContext(LayerContext);
     const [values, setValues] = useState([])
-    const [rarityModalShow,setRarityModalShow] = useState(false) 
+    const [rarityModalShow, setRarityModalShow] = useState(false)
     const [rarities, setRarities] = useState([])
     const [number, setNumber] = useState(1)
     const [reload, setReload] = useState(false);
@@ -35,16 +35,18 @@ const Home = () => {
     const maxNumber = 100;
     const [combined, setcombineimages] = useState([]);
 
-    const modalclose=()=>{setRarityModalShow(false)}
+    const modalclose = () => { setRarityModalShow(false) }
 
-    const sendvalue = (index, data)=>{
+    const sendvalue = (index, data) => {
         console.log(index, data)
         let array = rarities
-        for(let i = 0 ; i < array.length; i ++){
-            if(array[i][index]) array[i] = data
+        for (let i = 0; i < array.length; i++) {
+            if (array[i][index]) array[i] = data
         }
         setRarities(array)
     }
+
+    const [layerValue, setLayerValue] = useState([])
 
     const onChange = async (imageList, addUpdateIndex) => {
         addUpdateIndex = addUpdateIndex ? addUpdateIndex : 0;
@@ -78,44 +80,68 @@ const Home = () => {
 
     useEffect(() => {
         let arr = []
+        let arr1 = []
         db.collection('Skin').get().then(allLayer => {
             setLayer0(allLayer[allLayer.length - 1].newImageGroup)
+            let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
+            arr1.push({
+                'Skin': temp1
+            })
             let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
             arr.push({
-                'Skin' : temp
+                'Skin': temp
             })
         })
         db.collection('Shirts').get().then(allLayer => {
             setLayer1(allLayer[allLayer.length - 1].newImageGroup)
+            let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
+            arr1.push({
+                'Shirts': temp1
+            })
             let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
             arr.push({
-                'Shirts' : temp
+                'Shirts': temp
             })
         })
         db.collection('Mouth').get().then(allLayer => {
             setLayer2(allLayer[allLayer.length - 1].newImageGroup)
+            let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
+            arr1.push({
+                'Mouth': temp1
+            })
             let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
             arr.push({
-                'Mouth' : temp
+                'Mouth': temp
             })
         })
         db.collection('Eyes').get().then(allLayer => {
             setLayer3(allLayer[allLayer.length - 1].newImageGroup)
+            let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
+            arr1.push({
+                'Eyes': temp1
+            })
             let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
             arr.push({
-                'Eyes' : temp
+                'Eyes': temp
             })
         })
         setRarities(arr)
+        setLayerValue(arr1)
     }, [allLayers, reloadCombine])
+
+    console.log(rarities);
+    console.log(rarities[0]?.Skin[0]);
+
+    console.log(layerValue);
+    console.log(layerValue[0]?.Skin[0]?.[0].data_url);
 
     const maxUniqueLayer0Value = Math.floor(Math.random() * (layer0.length - 1 + 1));
     const maxUniqueLayer1Value = Math.floor(Math.random() * (layer1.length - 1 + 1));
     const maxUniqueLayer2Value = Math.floor(Math.random() * (layer2.length - 1 + 1));
     const maxUniqueLayer3Value = Math.floor(Math.random() * (layer3.length - 1 + 1));
 
-    
-    function getRandom (weights) {
+
+    function getRandom(weights) {
         weights = weights.map(item => item / 100)
         var num = Math.random(),
             s = 0,
@@ -130,23 +156,25 @@ const Home = () => {
 
         return lastIndex + 1;
     };
-
+    
     const combine = () => {
 
-        if(!number) alert("input number")
+        if (!number) alert("input number")
 
-        for(let i = 0; i < number; i ++){
+        for (let i = 0; i < number; i++) {
             let arr = []
             mergeImages([
-                layer0[maxUniqueLayer0Value].data_url,
-                layer1[maxUniqueLayer1Value].data_url,
-                layer2[maxUniqueLayer2Value].data_url,
-                layer3[maxUniqueLayer3Value].data_url
+                // need to change the probability
+                layerValue[0]?.Skin[0]?.[getRandom([0.1, 0.2, 0.7])].data_url,
+                layerValue[0]?.Shirts[0]?.[getRandom([0.1, 0.2, 0.7])].data_url,
+                layerValue[0]?.Eyes[0]?.[getRandom([0.1, 0.2, 0.7])].data_url,
+                layerValue[0]?.Mouth[0]?.[getRandom([0.1, 0.2, 0.7])].data_url,
+
             ])
-            .then((b64) => {
-                arr.push(b64)
-            })
-            .catch(error => console.log(error))
+                .then((b64) => {
+                    arr.push(b64)
+                })
+                .catch(error => console.log(error))
             setcombineimages(arr)
         }
     }
@@ -220,7 +248,7 @@ const Home = () => {
                             )}
                         </ImageUploading>
                     </div>
-                    <input type="number" value={number} onChange={e=>setNumber(e.target.value)}></input>
+                    <input type="number" value={number} onChange={e => setNumber(e.target.value)}></input>
                     <button className='btn btn-success' onClick={combine} onMouseEnter={() => setReloadCombine(true)}> combine</button>
                     <img width="100" src={combined[0]}></img>
                     <button className='btn btn-info' onClick={download}> download</button>
@@ -231,21 +259,21 @@ const Home = () => {
 
             </div >
 
-            <Modal 
-            dialogClassName ="modala"
-            show={rarityModalShow}
-            onHide={modalclose}
-            backdrop="static"
-            keyboard={false}
-            size="lg"
-            centered>
-                <Modal.Header closeButton closeVariant='black' style={{height:"70px"}}>
-                        <Modal.Title>Rarity Settings</Modal.Title>
+            <Modal
+                dialogClassName="modala"
+                show={rarityModalShow}
+                onHide={modalclose}
+                backdrop="static"
+                keyboard={false}
+                size="lg"
+                centered>
+                <Modal.Header closeButton closeVariant='black' style={{ height: "70px" }}>
+                    <Modal.Title>Rarity Settings</Modal.Title>
                 </Modal.Header>
-                <Modal.Body style={{marginTop:"-10px"}}>
+                <Modal.Body style={{ marginTop: "-10px" }}>
                     <Container>
-                        <MultiSlider Items = {images} sendValues = {sendvalue} layername={selectedLayer} values = {rarities.find(item=>item[selectedLayer])}/>
-                    </Container> 
+                        <MultiSlider Items={images} sendValues={sendvalue} layername={selectedLayer} values={rarities.find(item => item[selectedLayer])} />
+                    </Container>
                 </Modal.Body>
             </Modal>
         </div >
