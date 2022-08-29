@@ -9,7 +9,6 @@ import { ALLLayerContext, LayerContext } from '../../App';
 // Get Data from Local Storage
 const getLocalLayers = () => {
     let layers = localStorage.getItem('nftArtLayers');
-    console.log(layers);
     
     if (layers) {
         return JSON.parse(layers);

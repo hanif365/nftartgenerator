@@ -6,15 +6,27 @@ import './Home.css';
 import Layers from '../Layers/Layers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
+import MultiSlider from '../Multislider';
+
+import Modal from "react-bootstrap/Modal";
+import {Container,Row,Col} from "react-bootstrap"
 
 // indexedDB
 import Localbase from 'localbase';
 import { ALLLayerContext, LayerContext } from '../../App';
 let db = new Localbase('nftArtDB');
 
+const data = ["Red hat", "Blue hat", "Green hat", "Black hat"]
+
 const Home = () => {
     const [allLayers, setAllLayers] = useContext(ALLLayerContext);
     const [selectedLayer, setSelectedLayer] = useContext(LayerContext);
+    const [values, setValues] = useState([])
+    const [rarityModalShow,setRarityModalShow] = useState(false) 
+    const [rarities, setRarities] = useState([])
+    const [number, setNumber] = useState()
+
+    const modalclose=()=>{setRarityModalShow(false)}
 
     // console.log("ALL Layers from Layers Component: ", allLayers);
 
@@ -49,41 +61,19 @@ const Home = () => {
     const [combined, setcombineimages] = useState();
 
     const onChange = async (imageList, addUpdateIndex) => {
-
-        // console.log(imageList);
-        // console.log(addUpdateIndex);
-
-        // code used for remove an image
-        // here we set addUpdateIndex value 0 if it was undefined
         addUpdateIndex = addUpdateIndex ? addUpdateIndex : 0;
-
-        // console.log(addUpdateIndex);
-
         let newUploadImageStore = [];
 
         for (let i = 0; i < addUpdateIndex.length; i++) {
-            // console.log(imageList[addUpdateIndex[i]]);
             newUploadImageStore.push(imageList[addUpdateIndex[i]])
         }
-
-        // console.log(newUploadImageStore);
-        // console.log(selectedLayer);
-        // console.log(images);
-
         let newImageGroup;
-
-        // condition check for remove operation (we set if addUpdateIndex is undefined then it value will be 0)
-        //  when we delete an image then we get updated list from imageList
         if (addUpdateIndex == 0) {
-            // newImageGroup = newUploadImageStore.concat(...imageList)
             newImageGroup = imageList;
         }
         else {
             newImageGroup = newUploadImageStore.concat(...images);
         }
-        // console.log(newImageGroup);
-
-
         await db.collection(selectedLayer).add({ newImageGroup })
 
         setReload(!reload);
@@ -91,21 +81,11 @@ const Home = () => {
 
     useEffect(() => {
         db.collection(selectedLayer).get().then(selectedLayer => {
-            // console.log("ALl selectedLayer : ", selectedLayer);
-            // console.log(selectedLayer.length);
-
-            // console.log(selectedLayer[selectedLayer.length - 1].newUploadImageStore);
-            // setImages(selectedLayer[selectedLayer.length - 1].newUploadImageStore);
-
-            // working
-            // console.log(selectedLayer[selectedLayer.length - 1].newImageGroup);
-            // setImages(selectedLayer[selectedLayer.length - 1].newImageGroup);
 
             if (selectedLayer.length == 0) {
                 setImages([])
             }
             else {
-                // console.log(selectedLayer[selectedLayer.length - 1].newImageGroup);
                 setImages(selectedLayer[selectedLayer.length - 1].newImageGroup);
             }
 
@@ -113,52 +93,7 @@ const Home = () => {
         })
     }, [selectedLayer, reload])
 
-    // console.log(typeof (images));
-    // console.log(images);
-
-    // code for combine
-    // useEffect(() => {
-    //     // console.log(allLayers);
-
-    //     for (let i = 0; i < allLayers.length; i++) {
-    //         // console.log(allLayers[i]);
-
-    //         db.collection(allLayers[i]).get().then(allLayer => {
-    //             var layerName = allLayers[i];
-    //             console.log(layerName);
-
-
-    //             // console.log("allLayer : ", allLayer);
-    //             // console.log("Current Images of Layer : ", allLayer[allLayer.length - 1].newImageGroup);
-
-    //             // setAllLayerValues(allLayer[allLayer.length - 1].newImageGroup)
-
-    //             setAllLayerValues({ ...allLayerValues, [layerName]: allLayer[allLayer.length - 1].newImageGroup })
-
-    //             // console.log("Length: ", allLayer[allLayer.length - 1].newImageGroup.length);
-
-    //         })
-
-    //     }
-
-
-
-    // }, [allLayers, reloadCombine])
-
-
-    // new journey start
-    useEffect(() => {
-        console.log(allLayers);
-        console.log(allLayers[0]);
-        
-        
-        // for(let i = 0; i< allLayers.length; i++ ){
-        //     db.collection(allLayers[i]).get().then(allLayer => {
-        //         setLayer0(allLayer[allLayer.length - 1].newImageGroup)
-                
-        //     })
-        // } 
-
+    useEffect(() => {        
         db.collection('Skin').get().then(allLayer => {
             setLayer0(allLayer[allLayer.length - 1].newImageGroup)
             
@@ -178,65 +113,33 @@ const Home = () => {
 
     }, [allLayers, reloadCombine])
 
-    console.log(layer0);
-    console.log(layer1);
-    console.log(layer2);
-    console.log(layer3);
-    
-    // new journey end
-
-
-
-
-    // console.log("ALlLayers Value : ******** : ", allLayerValues);
-    // console.log("test : ******** : ", allLayerValues.test);
-    // console.log("skin : *********: ", allLayerValues.Skin);
-    // console.log("Eyes : *********: ", allLayerValues.Eyes);
-    // console.log("Mouth : *********: ", allLayerValues.Mouth);
-    // console.log("Background : *********: ", allLayerValues.Background);
-
-    // get layer content from useState
-    // console.log(allLayers);
-    // console.log(allLayers.length);
-    // for (let i = 0; i < allLayers.length; i++) {
-    //     console.log("***********************STARTING *************************");
-    //     console.log(allLayers[i]);
-    //     const tt = allLayers[i];
-    //     console.log(tt);
-
-    //     console.log("Hanif : ******** : ", allLayerValues[tt]);
-    //     console.log("Hanif child: ******** : ", allLayerValues[tt]?.[0]);
-    //     // console.log("Hanif : ******** : ", allLayerValues);
-    // }
-
-
-
-
-    console.log(layer0.length);
-    console.log(layer1.length);
-    console.log(layer2.length);
-    console.log(layer3.length);
-    // const maxUniqueLayer1Value = Math.floor(Math.random() * (max - min + 1)) + min;
     const maxUniqueLayer0Value = Math.floor(Math.random() * (layer0.length - 1 + 1));
     const maxUniqueLayer1Value = Math.floor(Math.random() * (layer1.length - 1 + 1));
     const maxUniqueLayer2Value = Math.floor(Math.random() * (layer2.length - 1 + 1));
     const maxUniqueLayer3Value = Math.floor(Math.random() * (layer3.length - 1 + 1));
 
+    
+    function getRandom (weights) {
+        // weights = [0.3, 0.3, 0.3, 0.1]
+        var num = Math.random(),
+            s = 0,
+            lastIndex = weights.length - 1;
+
+        for (var i = 0; i < lastIndex; ++i) {
+            s += weights[i];
+            if (num < s) {
+                return i + 1;
+            }
+        }
+
+        return lastIndex + 1;
+    };
+
     const combine = () => {
+        if(!number) alert("input number")
+       for(let i = 0; i < number; i ++){
+
         mergeImages([
-            // allLayerValues.Background?.[0].data_url,
-            // console.log(allLayerValues.Skin),
-            // allLayerValues.Skin?.[0].data_url,
-            // allLayerValues.Eyes?.[0].data_url,
-            // allLayerValues.Mouth?.[0].data_url,
-            // allLayerValues.test?.[0].data_url,
-
-            // images[0].data_url,
-            // images[1].data_url,
-            // images[2].data_url,
-            // images[3].data_url,
-
-            // layer0[0].data_url,
             layer0[maxUniqueLayer0Value].data_url,
             layer1[maxUniqueLayer1Value].data_url,
             layer2[maxUniqueLayer2Value].data_url,
@@ -247,11 +150,18 @@ const Home = () => {
                 setcombineimages(b64)
             })
             .catch(error => console.log(error))
+       }
     }
 
     const download = () => {
         saveAs(combined, 'image.jpg') // Put your image url here.
     }
+
+    const showmodal = () => {
+        console.log(images)
+        setRarityModalShow(true)
+    }
+
     return (
         <div className="App-container">
             <div className="row">
@@ -312,34 +222,34 @@ const Home = () => {
                             )}
                         </ImageUploading>
                     </div>
-
+                    <input type="number" value={number} onChange={e=>setNumber(e.target.value)}></input>
                     <button className='btn btn-success' onClick={combine} onMouseEnter={() => setReloadCombine(true)}> combine</button>
                     <img width="100" src={combined}></img>
                     <button className='btn btn-info' onClick={download}> download</button>
+                    <button onClick={showmodal}>Rarity</button>
                 </div>
                 <div className="col-md-3"></div>
 
 
             </div >
 
-            {/*  */}
-            {/* {allLayerValues.mobile} <br />
-            {allLayerValues.username}
-            <input type="text"
-                className="form-control"
-                id="mobile"
-                name="mobile"
-                placeholder="Enter a valid mobile number"
-                onChange={changeHandler}
-            />
-            <input type="text"
-                className="form-control"
-                id="username"
-                name="username"
-                placeholder="Enter a valid mobile number"
-                onChange={changeHandler}
-            /> */}
-            {/*  */}
+            <Modal 
+            dialogClassName ="modala"
+            show={rarityModalShow}
+            onHide={modalclose}
+            backdrop="static"
+            keyboard={false}
+            size="lg"
+            centered>
+                <Modal.Header closeButton closeVariant='black' style={{height:"70px"}}>
+                        <Modal.Title>Rarity Settings</Modal.Title>
+                </Modal.Header>
+                <Modal.Body style={{marginTop:"-10px"}}>
+                    <Container>
+                        <MultiSlider Items = {images} sendValues = {setValues}/>
+                    </Container>
+                </Modal.Body>
+            </Modal>
         </div >
     );
 };
