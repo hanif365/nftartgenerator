@@ -16,49 +16,26 @@ import Localbase from 'localbase';
 import { ALLLayerContext, LayerContext } from '../../App';
 let db = new Localbase('nftArtDB');
 
-const data = ["Red hat", "Blue hat", "Green hat", "Black hat"]
-
 const Home = () => {
     const [allLayers, setAllLayers] = useContext(ALLLayerContext);
     const [selectedLayer, setSelectedLayer] = useContext(LayerContext);
     const [values, setValues] = useState([])
     const [rarityModalShow,setRarityModalShow] = useState(false) 
     const [rarities, setRarities] = useState([])
-    const [number, setNumber] = useState()
-
-    const modalclose=()=>{setRarityModalShow(false)}
-
-    // console.log("ALL Layers from Layers Component: ", allLayers);
-
-    // console.log("selectedLayer : ", selectedLayer);
+    const [number, setNumber] = useState(1)
     const [reload, setReload] = useState(false);
-
-    // code for combine
     const [reloadCombine, setReloadCombine] = useState(false);
 
-    // extra
-    // const [allLayerValues, setAllLayerValues] = useState({
-    //     // test: [],
-    //     // Skin: [],
-    //     // Eyes: [],
-    //     // Background: [],
-    //     // Mouth: [],
-    // });
-    // const changeHandler = e => {
-    //     setAllLayerValues({ ...allLayerValues, [e.target.name]: e.target.value })
-    // }
-
-
-    // new journey start
     const [layer0, setLayer0] = useState([]);
     const [layer1, setLayer1] = useState([]);
     const [layer2, setLayer2] = useState([]);
     const [layer3, setLayer3] = useState([]);
-    // new journey end
 
     const [images, setImages] = useState([]);
     const maxNumber = 100;
     const [combined, setcombineimages] = useState();
+
+    const modalclose=()=>{setRarityModalShow(false)}
 
     const onChange = async (imageList, addUpdateIndex) => {
         addUpdateIndex = addUpdateIndex ? addUpdateIndex : 0;

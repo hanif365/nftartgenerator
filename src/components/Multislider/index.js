@@ -10,13 +10,7 @@ function MultiSlider({Items, sendValues}){
     const [advancedvalues, setAdvancedValues] = useState(
         new Array(Items.length).fill(50)
     )
-
     const [totalRange, setTotalRange] = useState(Items.length * 50)
-
-    useEffect(()=>{
-        console.log("items",Items[0].file.name)
-    },[])
-
 
     useEffect(()=>{
         let arr = []
