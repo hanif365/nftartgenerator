@@ -33,7 +33,7 @@ const Home = () => {
 
     const [images, setImages] = useState([]);
     const maxNumber = 100;
-    const [combined, setcombineimages] = useState();
+    const [combined, setcombineimages] = useState([]);
 
     const modalclose=()=>{setRarityModalShow(false)}
 
@@ -116,7 +116,7 @@ const Home = () => {
 
     
     function getRandom (weights) {
-        // weights = [0.3, 0.3, 0.3, 0.1]
+        weights = weights.map(item => item / 100)
         var num = Math.random(),
             s = 0,
             lastIndex = weights.length - 1;
@@ -136,22 +136,23 @@ const Home = () => {
         if(!number) alert("input number")
 
         for(let i = 0; i < number; i ++){
+            let arr = []
             mergeImages([
                 layer0[maxUniqueLayer0Value].data_url,
                 layer1[maxUniqueLayer1Value].data_url,
                 layer2[maxUniqueLayer2Value].data_url,
                 layer3[maxUniqueLayer3Value].data_url
             ])
-                .then((b64) => {
-                    console.log(b64)
-                    setcombineimages(b64)
-                })
-                .catch(error => console.log(error))
+            .then((b64) => {
+                arr.push(b64)
+            })
+            .catch(error => console.log(error))
+            setcombineimages(arr)
         }
     }
 
     const download = () => {
-        saveAs(combined, 'image.jpg') // Put your image url here.
+        saveAs(combined[0], 'image.jpg') // Put your image url here.
     }
 
     const showmodal = () => {
@@ -221,7 +222,7 @@ const Home = () => {
                     </div>
                     <input type="number" value={number} onChange={e=>setNumber(e.target.value)}></input>
                     <button className='btn btn-success' onClick={combine} onMouseEnter={() => setReloadCombine(true)}> combine</button>
-                    <img width="100" src={combined}></img>
+                    <img width="100" src={combined[0]}></img>
                     <button className='btn btn-info' onClick={download}> download</button>
                     <button onClick={showmodal}>Rarity</button>
                 </div>
