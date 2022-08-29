@@ -8,18 +8,23 @@ function MultiSlider({Items, sendValues, values, layername}){
 
     const [advancedMode, setAdvancedMode] = useState(false)
     const [advancedvalues, setAdvancedValues] = useState([])
-    const [totalRange, setTotalRange] = useState(Items.length * 50)
+    const [totalRange, setTotalRange] = useState()
 
     useEffect(()=>{
         setAdvancedValues(values[layername])
+        setTotalRange(values[layername].reduce((x, y) => parseInt(x) + parseInt(y)))
     },[])
 
     useEffect(()=>{
+
         let arr = []
         advancedvalues.forEach((item, index)=>{
             arr.push((item / totalRange * 100).toFixed(2))
         })
-        // sendValues(layername, arr)
+        let obj = {}
+        obj[layername] = arr
+        sendValues(layername, obj)
+
     },[advancedvalues])
 
       function advanceHandleChange(index, value) {

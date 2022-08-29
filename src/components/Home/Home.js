@@ -38,8 +38,11 @@ const Home = () => {
     const modalclose=()=>{setRarityModalShow(false)}
 
     const sendvalue = (index, data)=>{
+        console.log(index, data)
         let array = rarities
-        array[index] = data
+        for(let i = 0 ; i < array.length; i ++){
+            if(array[i][index]) array[i] = data
+        }
         setRarities(array)
     }
 
