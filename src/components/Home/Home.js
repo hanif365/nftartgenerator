@@ -152,7 +152,7 @@ const Home = () => {
         console.log(allLayers[0]);
         
         
-        // for(let i = 3; i< allLayers.length; i++ ){
+        // for(let i = 0; i< allLayers.length; i++ ){
         //     db.collection(allLayers[i]).get().then(allLayer => {
         //         setLayer0(allLayer[allLayer.length - 1].newImageGroup)
                 
@@ -212,6 +212,16 @@ const Home = () => {
 
 
 
+    console.log(layer0.length);
+    console.log(layer1.length);
+    console.log(layer2.length);
+    console.log(layer3.length);
+    // const maxUniqueLayer1Value = Math.floor(Math.random() * (max - min + 1)) + min;
+    const maxUniqueLayer0Value = Math.floor(Math.random() * (layer0.length - 1 + 1));
+    const maxUniqueLayer1Value = Math.floor(Math.random() * (layer1.length - 1 + 1));
+    const maxUniqueLayer2Value = Math.floor(Math.random() * (layer2.length - 1 + 1));
+    const maxUniqueLayer3Value = Math.floor(Math.random() * (layer3.length - 1 + 1));
+
     const combine = () => {
         mergeImages([
             // allLayerValues.Background?.[0].data_url,
@@ -226,10 +236,11 @@ const Home = () => {
             // images[2].data_url,
             // images[3].data_url,
 
-            layer0[0].data_url,
-            layer1[0].data_url,
-            layer2[0].data_url,
-            layer3[0].data_url
+            // layer0[0].data_url,
+            layer0[maxUniqueLayer0Value].data_url,
+            layer1[maxUniqueLayer1Value].data_url,
+            layer2[maxUniqueLayer2Value].data_url,
+            layer3[maxUniqueLayer3Value].data_url
         ])
             .then((b64) => {
                 console.log(b64)
