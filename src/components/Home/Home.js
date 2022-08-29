@@ -19,7 +19,6 @@ let db = new Localbase('nftArtDB');
 const Home = () => {
     const [allLayers, setAllLayers] = useContext(ALLLayerContext);
     const [selectedLayer, setSelectedLayer] = useContext(LayerContext);
-    const [values, setValues] = useState([])
     const [rarityModalShow,setRarityModalShow] = useState(false) 
     const [rarities, setRarities] = useState([])
     const [number, setNumber] = useState(1)
@@ -116,7 +115,6 @@ const Home = () => {
 
     
     function getRandom (weights) {
-        weights = weights.map(item => item / 100)
         var num = Math.random(),
             s = 0,
             lastIndex = weights.length - 1;
@@ -145,6 +143,7 @@ const Home = () => {
             ])
             .then((b64) => {
                 arr.push(b64)
+                console.log(b64)
             })
             .catch(error => console.log(error))
             setcombineimages(arr)
