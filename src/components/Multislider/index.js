@@ -4,20 +4,22 @@ import { useState, useEffect } from "react"
 import {Container,Row,Col} from "react-bootstrap"
 import Switch from '@mui/material/Switch';
 
-function MultiSlider({Items, sendValues}){
+function MultiSlider({Items, sendValues, values, layername}){
 
     const [advancedMode, setAdvancedMode] = useState(false)
-    const [advancedvalues, setAdvancedValues] = useState(
-        new Array(Items.length).fill(50)
-    )
+    const [advancedvalues, setAdvancedValues] = useState([])
     const [totalRange, setTotalRange] = useState(Items.length * 50)
+
+    useEffect(()=>{
+        setAdvancedValues(values[layername])
+    },[])
 
     useEffect(()=>{
         let arr = []
         advancedvalues.forEach((item, index)=>{
             arr.push((item / totalRange * 100).toFixed(2))
         })
-        sendValues(arr)
+        // sendValues(layername, arr)
     },[advancedvalues])
 
       function advanceHandleChange(index, value) {

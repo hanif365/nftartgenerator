@@ -37,6 +37,12 @@ const Home = () => {
 
     const modalclose=()=>{setRarityModalShow(false)}
 
+    const sendvalue = (index, data)=>{
+        let array = rarities
+        array[index] = data
+        setRarities(array)
+    }
+
     const onChange = async (imageList, addUpdateIndex) => {
         addUpdateIndex = addUpdateIndex ? addUpdateIndex : 0;
         let newUploadImageStore = [];
@@ -58,36 +64,46 @@ const Home = () => {
 
     useEffect(() => {
         db.collection(selectedLayer).get().then(selectedLayer => {
-
             if (selectedLayer.length == 0) {
                 setImages([])
             }
             else {
                 setImages(selectedLayer[selectedLayer.length - 1].newImageGroup);
             }
-
-
         })
     }, [selectedLayer, reload])
 
-    useEffect(() => {        
+    useEffect(() => {
+        let arr = []
         db.collection('Skin').get().then(allLayer => {
             setLayer0(allLayer[allLayer.length - 1].newImageGroup)
-            
+            let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
+            arr.push({
+                'Skin' : temp
+            })
         })
         db.collection('Shirts').get().then(allLayer => {
             setLayer1(allLayer[allLayer.length - 1].newImageGroup)
-            
+            let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
+            arr.push({
+                'Shirts' : temp
+            })
         })
         db.collection('Mouth').get().then(allLayer => {
             setLayer2(allLayer[allLayer.length - 1].newImageGroup)
-            
+            let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
+            arr.push({
+                'Mouth' : temp
+            })
         })
         db.collection('Eyes').get().then(allLayer => {
             setLayer3(allLayer[allLayer.length - 1].newImageGroup)
-            
+            let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
+            arr.push({
+                'Eyes' : temp
+            })
         })
-
+        setRarities(arr)
     }, [allLayers, reloadCombine])
 
     const maxUniqueLayer0Value = Math.floor(Math.random() * (layer0.length - 1 + 1));
@@ -113,21 +129,22 @@ const Home = () => {
     };
 
     const combine = () => {
-        if(!number) alert("input number")
-       for(let i = 0; i < number; i ++){
 
-        mergeImages([
-            layer0[maxUniqueLayer0Value].data_url,
-            layer1[maxUniqueLayer1Value].data_url,
-            layer2[maxUniqueLayer2Value].data_url,
-            layer3[maxUniqueLayer3Value].data_url
-        ])
-            .then((b64) => {
-                console.log(b64)
-                setcombineimages(b64)
-            })
-            .catch(error => console.log(error))
-       }
+        if(!number) alert("input number")
+
+        for(let i = 0; i < number; i ++){
+            mergeImages([
+                layer0[maxUniqueLayer0Value].data_url,
+                layer1[maxUniqueLayer1Value].data_url,
+                layer2[maxUniqueLayer2Value].data_url,
+                layer3[maxUniqueLayer3Value].data_url
+            ])
+                .then((b64) => {
+                    console.log(b64)
+                    setcombineimages(b64)
+                })
+                .catch(error => console.log(error))
+        }
     }
 
     const download = () => {
@@ -135,7 +152,7 @@ const Home = () => {
     }
 
     const showmodal = () => {
-        console.log(images)
+        console.log(allLayers.indexOf(selectedLayer), rarities, rarities[selectedLayer])
         setRarityModalShow(true)
     }
 
@@ -223,8 +240,8 @@ const Home = () => {
                 </Modal.Header>
                 <Modal.Body style={{marginTop:"-10px"}}>
                     <Container>
-                        <MultiSlider Items = {images} sendValues = {setValues}/>
-                    </Container>
+                        <MultiSlider Items = {images} sendValues = {sendvalue} layername={selectedLayer} values = {rarities.find(item=>item[selectedLayer])}/>
+                    </Container> 
                 </Modal.Body>
             </Modal>
         </div >
