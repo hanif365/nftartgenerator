@@ -3,14 +3,14 @@ import './Layers.css';
 // import todoLogo from '../../Assets/Images/todoLogo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenToSquare, faSquarePlus, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { LayerContext } from '../../App';
+import { ALLLayerContext, LayerContext } from '../../App';
 
 
 // Get Data from Local Storage
 const getLocalLayers = () => {
-    let layers = localStorage.getItem('todoLayers');
-    // console.log(layers);
-
+    let layers = localStorage.getItem('nftArtLayers');
+    console.log(layers);
+    
     if (layers) {
         return JSON.parse(layers);
     } else {
@@ -21,9 +21,12 @@ const getLocalLayers = () => {
 
 
 const Layers = () => {
+    const [allLayers, setAllLayers] = useContext(ALLLayerContext);
     const [selectedLayer, setSelectedLayer] = useContext(LayerContext);
     const [inputData, setInputData] = useState("");
     const [layers, setLayers] = useState(getLocalLayers());
+
+    setAllLayers(layers);
 
     // Add layers
     const addLayer = () => {
@@ -77,7 +80,7 @@ const Layers = () => {
 
     // Store Data in Local Storage
     useEffect(() => {
-        localStorage.setItem('todoLayers', JSON.stringify(layers))
+        localStorage.setItem('nftArtLayers', JSON.stringify(layers))
     }, [layers])
     
     return (

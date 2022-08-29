@@ -9,13 +9,40 @@ import { faCamera } from '@fortawesome/free-solid-svg-icons';
 
 // indexedDB
 import Localbase from 'localbase';
-import { LayerContext } from '../../App';
-let db = new Localbase('nftartDB');
+import { ALLLayerContext, LayerContext } from '../../App';
+let db = new Localbase('nftArtDB');
 
 const Home = () => {
+    const [allLayers, setAllLayers] = useContext(ALLLayerContext);
     const [selectedLayer, setSelectedLayer] = useContext(LayerContext);
-    console.log("selectedLayer : ", selectedLayer);
+
+    // console.log("ALL Layers from Layers Component: ", allLayers);
+
+    // console.log("selectedLayer : ", selectedLayer);
     const [reload, setReload] = useState(false);
+
+    // code for combine
+    const [reloadCombine, setReloadCombine] = useState(false);
+
+    // extra
+    // const [allLayerValues, setAllLayerValues] = useState({
+    //     // test: [],
+    //     // Skin: [],
+    //     // Eyes: [],
+    //     // Background: [],
+    //     // Mouth: [],
+    // });
+    // const changeHandler = e => {
+    //     setAllLayerValues({ ...allLayerValues, [e.target.name]: e.target.value })
+    // }
+
+
+    // new journey start
+    const [layer0, setLayer0] = useState([]);
+    const [layer1, setLayer1] = useState([]);
+    const [layer2, setLayer2] = useState([]);
+    const [layer3, setLayer3] = useState([]);
+    // new journey end
 
     const [images, setImages] = useState([]);
     const maxNumber = 100;
@@ -23,25 +50,25 @@ const Home = () => {
 
     const onChange = async (imageList, addUpdateIndex) => {
 
-        console.log(imageList);
-        console.log(addUpdateIndex);
+        // console.log(imageList);
+        // console.log(addUpdateIndex);
 
         // code used for remove an image
         // here we set addUpdateIndex value 0 if it was undefined
         addUpdateIndex = addUpdateIndex ? addUpdateIndex : 0;
 
-        console.log(addUpdateIndex);
+        // console.log(addUpdateIndex);
 
         let newUploadImageStore = [];
 
         for (let i = 0; i < addUpdateIndex.length; i++) {
-            console.log(imageList[addUpdateIndex[i]]);
+            // console.log(imageList[addUpdateIndex[i]]);
             newUploadImageStore.push(imageList[addUpdateIndex[i]])
         }
 
-        console.log(newUploadImageStore);
-        console.log(selectedLayer);
-        console.log(images);
+        // console.log(newUploadImageStore);
+        // console.log(selectedLayer);
+        // console.log(images);
 
         let newImageGroup;
 
@@ -54,7 +81,7 @@ const Home = () => {
         else {
             newImageGroup = newUploadImageStore.concat(...images);
         }
-        console.log(newImageGroup);
+        // console.log(newImageGroup);
 
 
         await db.collection(selectedLayer).add({ newImageGroup })
@@ -64,8 +91,8 @@ const Home = () => {
 
     useEffect(() => {
         db.collection(selectedLayer).get().then(selectedLayer => {
-            console.log("ALl selectedLayer : ", selectedLayer);
-            console.log(selectedLayer.length);
+            // console.log("ALl selectedLayer : ", selectedLayer);
+            // console.log(selectedLayer.length);
 
             // console.log(selectedLayer[selectedLayer.length - 1].newUploadImageStore);
             // setImages(selectedLayer[selectedLayer.length - 1].newUploadImageStore);
@@ -78,7 +105,7 @@ const Home = () => {
                 setImages([])
             }
             else {
-                console.log(selectedLayer[selectedLayer.length - 1].newImageGroup);
+                // console.log(selectedLayer[selectedLayer.length - 1].newImageGroup);
                 setImages(selectedLayer[selectedLayer.length - 1].newImageGroup);
             }
 
@@ -86,15 +113,123 @@ const Home = () => {
         })
     }, [selectedLayer, reload])
 
-    console.log(typeof (images));
-    console.log(images);
+    // console.log(typeof (images));
+    // console.log(images);
+
+    // code for combine
+    // useEffect(() => {
+    //     // console.log(allLayers);
+
+    //     for (let i = 0; i < allLayers.length; i++) {
+    //         // console.log(allLayers[i]);
+
+    //         db.collection(allLayers[i]).get().then(allLayer => {
+    //             var layerName = allLayers[i];
+    //             console.log(layerName);
+
+
+    //             // console.log("allLayer : ", allLayer);
+    //             // console.log("Current Images of Layer : ", allLayer[allLayer.length - 1].newImageGroup);
+
+    //             // setAllLayerValues(allLayer[allLayer.length - 1].newImageGroup)
+
+    //             setAllLayerValues({ ...allLayerValues, [layerName]: allLayer[allLayer.length - 1].newImageGroup })
+
+    //             // console.log("Length: ", allLayer[allLayer.length - 1].newImageGroup.length);
+
+    //         })
+
+    //     }
+
+
+
+    // }, [allLayers, reloadCombine])
+
+
+    // new journey start
+    useEffect(() => {
+        console.log(allLayers);
+        console.log(allLayers[0]);
+        
+        
+        // for(let i = 3; i< allLayers.length; i++ ){
+        //     db.collection(allLayers[i]).get().then(allLayer => {
+        //         setLayer0(allLayer[allLayer.length - 1].newImageGroup)
+                
+        //     })
+        // } 
+
+        db.collection('Skin').get().then(allLayer => {
+            setLayer0(allLayer[allLayer.length - 1].newImageGroup)
+            
+        })
+        db.collection('Shirts').get().then(allLayer => {
+            setLayer1(allLayer[allLayer.length - 1].newImageGroup)
+            
+        })
+        db.collection('Mouth').get().then(allLayer => {
+            setLayer2(allLayer[allLayer.length - 1].newImageGroup)
+            
+        })
+        db.collection('Eyes').get().then(allLayer => {
+            setLayer3(allLayer[allLayer.length - 1].newImageGroup)
+            
+        })
+
+    }, [allLayers, reloadCombine])
+
+    console.log(layer0);
+    console.log(layer1);
+    console.log(layer2);
+    console.log(layer3);
+    
+    // new journey end
+
+
+
+
+    // console.log("ALlLayers Value : ******** : ", allLayerValues);
+    // console.log("test : ******** : ", allLayerValues.test);
+    // console.log("skin : *********: ", allLayerValues.Skin);
+    // console.log("Eyes : *********: ", allLayerValues.Eyes);
+    // console.log("Mouth : *********: ", allLayerValues.Mouth);
+    // console.log("Background : *********: ", allLayerValues.Background);
+
+    // get layer content from useState
+    // console.log(allLayers);
+    // console.log(allLayers.length);
+    // for (let i = 0; i < allLayers.length; i++) {
+    //     console.log("***********************STARTING *************************");
+    //     console.log(allLayers[i]);
+    //     const tt = allLayers[i];
+    //     console.log(tt);
+
+    //     console.log("Hanif : ******** : ", allLayerValues[tt]);
+    //     console.log("Hanif child: ******** : ", allLayerValues[tt]?.[0]);
+    //     // console.log("Hanif : ******** : ", allLayerValues);
+    // }
+
+
+
 
     const combine = () => {
         mergeImages([
-            images[0].data_url,
-            images[1].data_url,
-            images[2].data_url,
-            images[3].data_url,
+            // allLayerValues.Background?.[0].data_url,
+            // console.log(allLayerValues.Skin),
+            // allLayerValues.Skin?.[0].data_url,
+            // allLayerValues.Eyes?.[0].data_url,
+            // allLayerValues.Mouth?.[0].data_url,
+            // allLayerValues.test?.[0].data_url,
+
+            // images[0].data_url,
+            // images[1].data_url,
+            // images[2].data_url,
+            // images[3].data_url,
+
+            layer0[0].data_url,
+            layer1[0].data_url,
+            layer2[0].data_url,
+            layer3[0].data_url
         ])
             .then((b64) => {
                 console.log(b64)
@@ -167,14 +302,33 @@ const Home = () => {
                         </ImageUploading>
                     </div>
 
-                    <button onClick={combine}> combine</button>
+                    <button className='btn btn-success' onClick={combine} onMouseEnter={() => setReloadCombine(true)}> combine</button>
                     <img width="100" src={combined}></img>
-                    <button onClick={download}> download</button>
+                    <button className='btn btn-info' onClick={download}> download</button>
                 </div>
                 <div className="col-md-3"></div>
 
 
             </div >
+
+            {/*  */}
+            {/* {allLayerValues.mobile} <br />
+            {allLayerValues.username}
+            <input type="text"
+                className="form-control"
+                id="mobile"
+                name="mobile"
+                placeholder="Enter a valid mobile number"
+                onChange={changeHandler}
+            />
+            <input type="text"
+                className="form-control"
+                id="username"
+                name="username"
+                placeholder="Enter a valid mobile number"
+                onChange={changeHandler}
+            /> */}
+            {/*  */}
         </div >
     );
 };
