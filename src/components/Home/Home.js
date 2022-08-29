@@ -128,18 +128,6 @@ const Home = () => {
         setRarities(arr)
         setLayerValue(arr1)
     }, [allLayers, reloadCombine])
-
-    console.log(rarities);
-    console.log(rarities[0]?.Skin[0]);
-
-    console.log(layerValue);
-    console.log(layerValue[0]?.Skin[0]?.[0].data_url);
-
-    const maxUniqueLayer0Value = Math.floor(Math.random() * (layer0.length - 1 + 1));
-    const maxUniqueLayer1Value = Math.floor(Math.random() * (layer1.length - 1 + 1));
-    const maxUniqueLayer2Value = Math.floor(Math.random() * (layer2.length - 1 + 1));
-    const maxUniqueLayer3Value = Math.floor(Math.random() * (layer3.length - 1 + 1));
-
     
     function getRandom (weights) {
         weights = weights.map(item => item / 100)
@@ -163,14 +151,24 @@ const Home = () => {
 
         for (let i = 0; i < number; i++) {
             let arr = []
-            mergeImages([
-                // need to change the probability
-                layerValue[0]?.Skin[0]?.[getRandom([0.1, 0.2, 0.7])].data_url,
-                layerValue[0]?.Shirts[0]?.[getRandom([0.1, 0.2, 0.7])].data_url,
-                layerValue[0]?.Eyes[0]?.[getRandom([0.1, 0.2, 0.7])].data_url,
-                layerValue[0]?.Mouth[0]?.[getRandom([0.1, 0.2, 0.7])].data_url,
+            let temp = []
 
-            ])
+            layerValue.map(item=>{
+                let key = Object.keys(item)[0]
+                let total = rarities.find(item => item[key])[key].reduce((x, y) => parseInt(x) + parseInt(y))
+                let rarityitem = rarities.find(item => item[key])
+                let newarr = []
+                for(let i = 0; i <rarityitem[key].length; i++ ){
+                    newarr.push(rarityitem[key][i] / total)
+                }
+
+                let random = getRandom(newarr)
+                console.log(item[key][0][random - 1], random)
+                temp.push(item[key][0][random - 1].data_url)
+            })
+            console.log(temp)
+            
+            mergeImages(temp)
             .then((b64) => {
                 arr.push(b64)
             })
