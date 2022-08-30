@@ -242,7 +242,7 @@ const Home = () => {
                                             <div key={index} class="card image-card">
                                                 <img src={image['data_url']} class="card-img-top" alt="..." />
                                                 <div class="">
-                                                    <p class="card-text">test</p>
+                                                    <p class="card-text">{image['file']['name']}</p>
                                                     {/* <button className='btn btn-sm btn-primary me-3 mt-2' onClick={() => onImageUpdate(index)}>Update</button> */}
                                                     <button className='btn px-5 btn-warning mb-2' onClick={() => onImageRemove(index)}>Remove</button>
                                                 </div>
