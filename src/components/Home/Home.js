@@ -81,50 +81,67 @@ const Home = () => {
     useEffect(() => {
         let arr = []
         let arr1 = []
-        db.collection('Skin').get().then(allLayer => {
-            setLayer0(allLayer[allLayer.length - 1].newImageGroup)
-            let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
-            arr1.push({
-                'Skin': temp1
+
+        allLayers.map(item => {
+
+            db.collection(item).get().then(allLayer => {
+                setLayer0(allLayer[allLayer.length - 1].newImageGroup)
+                let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
+                let obj = {}
+                obj[item] = temp1
+                arr1.push(obj)
+                let obj1 = {}
+                let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
+                obj1[item] = temp
+                arr.push(obj1)
             })
-            let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
-            arr.push({
-                'Skin': temp
-            })
+
         })
-        db.collection('Shirts').get().then(allLayer => {
-            setLayer1(allLayer[allLayer.length - 1].newImageGroup)
-            let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
-            arr1.push({
-                'Shirts': temp1
-            })
-            let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
-            arr.push({
-                'Shirts': temp
-            })
-        })
-        db.collection('Mouth').get().then(allLayer => {
-            setLayer2(allLayer[allLayer.length - 1].newImageGroup)
-            let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
-            arr1.push({
-                'Mouth': temp1
-            })
-            let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
-            arr.push({
-                'Mouth': temp
-            })
-        })
-        db.collection('Eyes').get().then(allLayer => {
-            setLayer3(allLayer[allLayer.length - 1].newImageGroup)
-            let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
-            arr1.push({
-                'Eyes': temp1
-            })
-            let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
-            arr.push({
-                'Eyes': temp
-            })
-        })
+
+        // db.collection('Skin').get().then(allLayer => {
+        //     setLayer0(allLayer[allLayer.length - 1].newImageGroup)
+        //     let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
+        //     arr1.push({
+        //         'Skin': temp1
+        //     })
+        //     let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
+        //     arr.push({
+        //         'Skin': temp
+        //     })
+        // })
+        // db.collection('Shirts').get().then(allLayer => {
+        //     setLayer1(allLayer[allLayer.length - 1].newImageGroup)
+        //     let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
+        //     arr1.push({
+        //         'Shirts': temp1
+        //     })
+        //     let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
+        //     arr.push({
+        //         'Shirts': temp
+        //     })
+        // })
+        // db.collection('Mouth').get().then(allLayer => {
+        //     setLayer2(allLayer[allLayer.length - 1].newImageGroup)
+        //     let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
+        //     arr1.push({
+        //         'Mouth': temp1
+        //     })
+        //     let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
+        //     arr.push({
+        //         'Mouth': temp
+        //     })
+        // })
+        // db.collection('Eyes').get().then(allLayer => {
+        //     setLayer3(allLayer[allLayer.length - 1].newImageGroup)
+        //     let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
+        //     arr1.push({
+        //         'Eyes': temp1
+        //     })
+        //     let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
+        //     arr.push({
+        //         'Eyes': temp
+        //     })
+        // })
         setRarities(arr)
         setLayerValue(arr1)
     }, [allLayers, reloadCombine])
@@ -190,8 +207,9 @@ const Home = () => {
         }
     }
 
-    const download = () => {
-        saveAs(combined[0], 'image.jpg') // Put your image url here.
+    const download = async () => {
+        for(let i = 0; i < combined.length; i++)
+            saveAs(combined[i], `${i}.jpg`) // Put your image url here.
     }
 
     const showmodal = () => {
