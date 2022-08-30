@@ -145,34 +145,48 @@ const Home = () => {
     };
     
     const combine = () => {
-
+        console.log(allLayers)
         if (!number) alert("input number")
 
-        for (let i = 0; i < number; i++) {
-            let arr = []
+        let arr = []
+
+        for (let j = 0; j < number; j++) {
             let temp = []
-
-            layerValue.map(item=>{
-                let key = Object.keys(item)[0]
-                let total = rarities.find(item => item[key])[key].reduce((x, y) => parseInt(x) + parseInt(y))
-                let rarityitem = rarities.find(item => item[key])
-                let newarr = []
-                for(let i = 0; i <rarityitem[key].length; i++ ){
-                    newarr.push(rarityitem[key][i] / total)
+            allLayers.map(layer=>{
+                for(let i = 0; i < layerValue.length; i++){
+                    if( layerValue[i][layer] ){
+                        let total = rarities.find(item => item[layer])[layer].reduce((x, y) => parseInt(x) + parseInt(y))
+                        let rarityitem = rarities.find(item => item[layer])
+                        let newarr = []
+                        for(let i = 0; i < rarityitem[layer].length; i++ ){
+                            newarr.push(rarityitem[layer][i] / total)
+                        }
+                        let random = getRandom(newarr)
+                        temp.push(layerValue[i][layer][0][random - 1].data_url)
+                    }
                 }
-
-                let random = getRandom(newarr)
-                console.log(item[key][0][random - 1], random)
-                temp.push(item[key][0][random - 1].data_url)
             })
+
+            // layerValue.map(item=>{
+            //     let key = Object.keys(item)[0]
+            //     let total = rarities.find(item => item[key])[key].reduce((x, y) => parseInt(x) + parseInt(y))
+            //     let rarityitem = rarities.find(item => item[key])
+            //     let newarr = []
+            //     for(let i = 0; i <rarityitem[key].length; i++ ){
+            //         newarr.push(rarityitem[key][i] / total)
+            //     }
+            //     let random = getRandom(newarr)
+            //     temp.push(item[key][0][random - 1].data_url)
+            // })
             console.log(temp)
             
             mergeImages(temp)
             .then((b64) => {
                 arr.push(b64)
+                console.log(arr)
+                setcombineimages(arr)
             })
             .catch(error => console.log(error))
-            setcombineimages(arr)
         }
     }
 
@@ -247,7 +261,15 @@ const Home = () => {
                     </div>
                     <input type="number" value={number} onChange={e => setNumber(e.target.value)}></input>
                     <button className='btn btn-success' onClick={combine} onMouseEnter={() => setReloadCombine(true)}> combine</button>
-                    <img width="100" src={combined[0]}></img>
+                    {
+                        combined?
+                        combined.map(item=>(
+                            <img width="100" src={item}></img>
+                        ))
+                        :
+                        <></>
+                    }
+                    
                     <button className='btn btn-info' onClick={download}> download</button>
                     <button onClick={showmodal}>Rarity</button>
                 </div>
