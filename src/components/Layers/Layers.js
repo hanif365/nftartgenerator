@@ -86,15 +86,10 @@ const Layers = () => {
         <div className='container-fluid py-5 todoContainer'>
             <div className="">
                 <div className=" bg-light py-5">
-                    <div className='text-center'>
-                        <figure>
-                            {/* <img src={todoLogo} alt="todoLogo" className='todoLogo' /> */}
-                        </figure>
-                        <figcaption className='todoTitle'></figcaption>
-                    </div>
-
-                    <div className='d-flex p-3 '>
-                        <input type="text" className="form-control me-3 inputField" placeholder='Add layer' value={inputData} onChange={(e) => setInputData(e.target.value)} />
+                    <p className='add-layer-p'>Add Layer</p>
+                    <div className='d-flex px-3 '>
+                        
+                        <input type="text" className="form-control me-3 inputField" placeholder='Add Layer' value={inputData} onChange={(e) => setInputData(e.target.value)} />
                         <FontAwesomeIcon icon={faSquarePlus} className='addBtn' onClick={() => addLayer()} />
                     </div>
 
