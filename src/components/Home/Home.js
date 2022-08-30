@@ -21,12 +21,8 @@ var zip = require('jszip')();
 const Home = () => {
     const [allLayers, setAllLayers] = useContext(ALLLayerContext);
     const [selectedLayer, setSelectedLayer] = useContext(LayerContext);
-<<<<<<< HEAD
     const [rarityModalShow,setRarityModalShow] = useState(false) 
-=======
     const [values, setValues] = useState([])
-    const [rarityModalShow, setRarityModalShow] = useState(false)
->>>>>>> 6c5a5fb2d62e25b3f484bf7f5df98e66ac020bb8
     const [rarities, setRarities] = useState([])
     const [number, setNumber] = useState(1)
     const [reload, setReload] = useState(false);
@@ -241,7 +237,7 @@ const Home = () => {
                 <div className="col-md-3">
                     <Layers></Layers>
                 </div>
-                <div className="col-md-7 bg-light my-5">
+                <div className="col-md-6 bg-light my-5">
                     <div className='upload-layer-images-div text-center py-5'>
                         <h2>Upload your layer images</h2>
                         <ImageUploading
@@ -288,36 +284,42 @@ const Home = () => {
                             )}
                         </ImageUploading>
                     </div>
-                    <input type="number" value={number} onChange={e => setNumber(e.target.value)}></input>
-                    <button className='btn btn-success' onClick={combine} onMouseEnter={() => setReloadCombine(true)}> combine</button>
-                    {
-                        combined ?
-                            combined.map(item => (
-                                <img width="100" src={item}></img>
-                            ))
-                            :
-                            <></>
-                    }
-<<<<<<< HEAD
-                    
-                    
+                  
                 </div>
-                <div className="col-md-3">
-                    <button className='btn btn-info' onClick={download}> download</button>
-                    <button onClick={showmodal}>Rarity</button>
+                <div className="col-md-3 py-5 px-5">
+                    <div className='row py-3'>
+                        <div className='col-6'>
+                            <input className='w-100 h-100' type="number" value={number} onChange={e => setNumber(e.target.value)}></input>  
+                        </div>
+                        <div className='col-6'>
+                            <button className='btn btn-success' onClick={combine} onMouseEnter={() => setReloadCombine(true)}> combine</button>
+                        </div>
+                    </div>
+                    <div className='previewtext'>
+                        Preview
+                    </div>
+                    <div className='fixed-height'>
+                        {
+                            combined ?
+                                combined.map(item => (
+                                    <img className='m-1 border border-1 border-primary hoverscale' width="100" src={item}></img>
+                                ))
+                                :
+                                <></>
+                        }
+                    </div>
+                    <div className='row'>
+                        <div className='col-6'>
+                            <button className='btn btn-info' onClick={download}> download</button>
+                        </div>
+                        <div className='col-6'>
+                            <button className='btn btn-danger' onClick={showmodal}>Rarity</button>
+                        </div>
+                    </div>
                 </div>
-=======
+            </div>
 
-                    <button className='btn btn-info' onClick={download}> download</button>
-                    <button onClick={showmodal}>Rarity</button>
-                </div>
-                <div className="col-md-2"></div>
->>>>>>> 6c5a5fb2d62e25b3f484bf7f5df98e66ac020bb8
-
-
-            </div >
-
-            <Modal
+                <Modal
                 dialogClassName="modala"
                 show={rarityModalShow}
                 onHide={modalclose}
@@ -325,16 +327,19 @@ const Home = () => {
                 keyboard={false}
                 size="lg"
                 centered>
-                <Modal.Header closeButton closeVariant='black' style={{ height: "70px" }}>
-                    <Modal.Title>Rarity Settings</Modal.Title>
-                </Modal.Header>
-                <Modal.Body style={{ marginTop: "-10px" }}>
-                    <Container>
-                        <MultiSlider Items={images} sendValues={sendvalue} layername={selectedLayer} values={rarities.find(item => item[selectedLayer])} />
-                    </Container>
-                </Modal.Body>
-            </Modal>
-        </div >
+                    <Modal.Header closeButton closeVariant='black' style={{ height: "70px" }}>
+                        <Modal.Title>Rarity Settings</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body style={{ marginTop: "-10px" }}>
+                        <Container>
+                            <MultiSlider Items={images} sendValues={sendvalue} layername={selectedLayer} values={rarities.find(item => item[selectedLayer])} />
+                        </Container>
+                    </Modal.Body>
+                </Modal>
+                
+            </div >
+
+            
     );
 };
 
