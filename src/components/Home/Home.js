@@ -19,17 +19,11 @@ let db = new Localbase('nftArtDB');
 const Home = () => {
     const [allLayers, setAllLayers] = useContext(ALLLayerContext);
     const [selectedLayer, setSelectedLayer] = useContext(LayerContext);
-    const [values, setValues] = useState([])
     const [rarityModalShow,setRarityModalShow] = useState(false) 
     const [rarities, setRarities] = useState([])
     const [number, setNumber] = useState(1)
     const [reload, setReload] = useState(false);
     const [reloadCombine, setReloadCombine] = useState(false);
-
-    const [layer0, setLayer0] = useState([]);
-    const [layer1, setLayer1] = useState([]);
-    const [layer2, setLayer2] = useState([]);
-    const [layer3, setLayer3] = useState([]);
 
     const [images, setImages] = useState([]);
     const maxNumber = 100;
@@ -85,7 +79,6 @@ const Home = () => {
         allLayers.map(item => {
 
             db.collection(item).get().then(allLayer => {
-                setLayer0(allLayer[allLayer.length - 1].newImageGroup)
                 let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
                 let obj = {}
                 obj[item] = temp1
@@ -142,6 +135,7 @@ const Home = () => {
         //         'Eyes': temp
         //     })
         // })
+
         setRarities(arr)
         setLayerValue(arr1)
     }, [allLayers, reloadCombine])
@@ -253,23 +247,16 @@ const Home = () => {
                                         {/* Click or Drop here */}
                                         <FontAwesomeIcon icon={faCamera} className='addBtn' />
                                     </button>
-
-
-                                    <div className="image-item">
+                                    <div className="image-item margin-bottom">
                                         {images && images.map((image, index) => (
                                             <div key={index} class="card image-card">
                                                 <img src={image['data_url']} class="card-img-top" alt="..." />
-                                                <div class="">
-                                                    <p class="card-text">{image['file']['name']}</p>
-                                                    {/* <button className='btn btn-sm btn-primary me-3 mt-2' onClick={() => onImageUpdate(index)}>Update</button> */}
-                                                    <button className='btn px-5 btn-warning mb-2' onClick={() => onImageRemove(index)}>Remove</button>
-                                                </div>
+                                                    <div class="card-text">{image['file']['name']}</div>
+                                                    <button className='btn px-2 btn-warning mb-1' onClick={() => onImageRemove(index)}>Remove</button>
                                             </div>
 
                                         ))}
                                     </div>
-
-
                                     <div className='my-5'>
                                         {images && images.length ? <button className='btn btn-danger' onClick={onImageRemoveAll}>Remove all images</button> : ' '}
                                     </div>
@@ -288,10 +275,12 @@ const Home = () => {
                         <></>
                     }
                     
+                    
+                </div>
+                <div className="col-md-3">
                     <button className='btn btn-info' onClick={download}> download</button>
                     <button onClick={showmodal}>Rarity</button>
                 </div>
-                <div className="col-md-3"></div>
 
 
             </div >

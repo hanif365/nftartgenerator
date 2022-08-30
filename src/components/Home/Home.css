@@ -19,7 +19,11 @@
 }
 
 .image-card {
-    width: 18rem;
+    width: 9rem;
     background-color: #BACBE6;
     margin: 5px;
+}
+
+.margin-bottom{
+    margin-bottom: 2px !important;
 }
