@@ -16,11 +16,13 @@ import Localbase from 'localbase';
 import { ALLLayerContext, LayerContext } from '../../App';
 let db = new Localbase('nftArtDB');
 
+var zip = require('jszip')();
+
 const Home = () => {
     const [allLayers, setAllLayers] = useContext(ALLLayerContext);
     const [selectedLayer, setSelectedLayer] = useContext(LayerContext);
     const [values, setValues] = useState([])
-    const [rarityModalShow,setRarityModalShow] = useState(false) 
+    const [rarityModalShow, setRarityModalShow] = useState(false)
     const [rarities, setRarities] = useState([])
     const [number, setNumber] = useState(1)
     const [reload, setReload] = useState(false);
@@ -145,8 +147,8 @@ const Home = () => {
         setRarities(arr)
         setLayerValue(arr1)
     }, [allLayers, reloadCombine])
-    
-    function getRandom (weights) {
+
+    function getRandom(weights) {
         var num = Math.random(),
             s = 0,
             lastIndex = weights.length - 1;
@@ -160,7 +162,7 @@ const Home = () => {
 
         return lastIndex + 1;
     };
-    
+
     const combine = () => {
         console.log(allLayers)
         if (!number) alert("input number")
@@ -169,13 +171,13 @@ const Home = () => {
 
         for (let j = 0; j < number; j++) {
             let temp = []
-            allLayers.map(layer=>{
-                for(let i = 0; i < layerValue.length; i++){
-                    if( layerValue[i][layer] ){
+            allLayers.map(layer => {
+                for (let i = 0; i < layerValue.length; i++) {
+                    if (layerValue[i][layer]) {
                         let total = rarities.find(item => item[layer])[layer].reduce((x, y) => parseInt(x) + parseInt(y))
                         let rarityitem = rarities.find(item => item[layer])
                         let newarr = []
-                        for(let i = 0; i < rarityitem[layer].length; i++ ){
+                        for (let i = 0; i < rarityitem[layer].length; i++) {
                             newarr.push(rarityitem[layer][i] / total)
                         }
                         let random = getRandom(newarr)
@@ -196,20 +198,37 @@ const Home = () => {
             //     temp.push(item[key][0][random - 1].data_url)
             // })
             console.log(temp)
-            
+
             mergeImages(temp)
-            .then((b64) => {
-                arr.push(b64)
-                console.log(arr)
-                setcombineimages(arr)
-            })
-            .catch(error => console.log(error))
+                .then((b64) => {
+                    arr.push(b64)
+                    console.log(arr)
+                    setcombineimages(arr)
+                })
+                .catch(error => console.log(error))
         }
     }
 
+    // code for make download nft as zip format
     const download = async () => {
-        for(let i = 0; i < combined.length; i++)
-            saveAs(combined[i], `${i}.jpg`) // Put your image url here.
+        var img = zip.folder("images");
+
+        for (let i = 0; i < combined.length; i++) {
+            console.log(combined[i]);
+            const dataFileArr = combined[i].split(",");
+            console.log(dataFileArr);
+
+            const dataFile = dataFileArr[1]
+            console.log(dataFile);
+
+            img.file(`${i}.png`, dataFile, { base64: true });
+
+            // saveAs(combined[i], `${i}.jpg`) // Put your image url here.
+        }
+
+        zip.generateAsync({ type: "blob" }).then(function (content) {
+            saveAs(content, "nft-art.zip");
+        });
     }
 
     const showmodal = () => {
@@ -223,7 +242,7 @@ const Home = () => {
                 <div className="col-md-3">
                     <Layers></Layers>
                 </div>
-                <div className="col-md-6 bg-light my-5">
+                <div className="col-md-7 bg-light my-5">
                     <div className='upload-layer-images-div text-center py-5'>
                         <h2>Upload your layer images</h2>
                         <ImageUploading
@@ -280,18 +299,18 @@ const Home = () => {
                     <input type="number" value={number} onChange={e => setNumber(e.target.value)}></input>
                     <button className='btn btn-success' onClick={combine} onMouseEnter={() => setReloadCombine(true)}> combine</button>
                     {
-                        combined?
-                        combined.map(item=>(
-                            <img width="100" src={item}></img>
-                        ))
-                        :
-                        <></>
+                        combined ?
+                            combined.map(item => (
+                                <img width="100" src={item}></img>
+                            ))
+                            :
+                            <></>
                     }
-                    
+
                     <button className='btn btn-info' onClick={download}> download</button>
                     <button onClick={showmodal}>Rarity</button>
                 </div>
-                <div className="col-md-3"></div>
+                <div className="col-md-2"></div>
 
 
             </div >
