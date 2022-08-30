@@ -130,7 +130,6 @@ const Home = () => {
     }, [allLayers, reloadCombine])
     
     function getRandom (weights) {
-        weights = weights.map(item => item / 100)
         var num = Math.random(),
             s = 0,
             lastIndex = weights.length - 1;
