@@ -7,6 +7,7 @@ import Layers from '../Layers/Layers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import MultiSlider from '../Multislider';
+import { AiFillCloseCircle } from "react-icons/ai";
 
 import Modal from "react-bootstrap/Modal";
 import { Container, Row, Col } from "react-bootstrap"
@@ -272,7 +273,7 @@ const Home = () => {
                                             <div key={index} class="card image-card">
                                                 <img src={image['data_url']} class="card-img-top" alt="..." />
                                                     <div class="card-text">{image['file']['name']}</div>
-                                                    <button className='btn px-2 btn-warning mb-1' onClick={() => onImageRemove(index)}>Remove</button>
+                                                    <div className='positionabsolute' onClick={() => onImageRemove(index)}><AiFillCloseCircle/></div>
                                             </div>
 
                                         ))}
@@ -336,7 +337,7 @@ const Home = () => {
                         </Container>
                     </Modal.Body>
                 </Modal>
-                
+
             </div >
 
             
