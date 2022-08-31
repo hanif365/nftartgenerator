@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import './Layers.css';
-// import todoLogo from '../../Assets/Images/todoLogo.png';
+import ReactDragListView from 'react-drag-listview';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenToSquare, faSquarePlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { ALLLayerContext, LayerContext } from '../../App';
@@ -9,7 +9,7 @@ import { ALLLayerContext, LayerContext } from '../../App';
 // Get Data from Local Storage
 const getLocalLayers = () => {
     let layers = localStorage.getItem('nftArtLayers');
-    
+    console.log(layers)
     if (layers) {
         return JSON.parse(layers);
     } else {
@@ -81,6 +81,20 @@ const Layers = () => {
     useEffect(() => {
         localStorage.setItem('nftArtLayers', JSON.stringify(layers))
     }, [layers])
+
+    const dragProps = {
+        onDragEnd(fromIndex, toIndex) {
+            const data = layers;
+            const item = data.splice(fromIndex, 1)[0];
+            data.splice(toIndex, 0, item);
+            console.log(data)
+            setLayers(data)
+            console.log(layers)
+        },
+        nodeSelector: 'div',
+        handleSelector:'a'
+      };
+  
     
     return (
         <div className='container-fluid py-5 todoContainer'>
@@ -94,15 +108,16 @@ const Layers = () => {
                     </div>
 
                     <div className='px-3'>
-                        {
-                            layers.map((layer, index) => {
-                                return (
+                        <ReactDragListView {...dragProps}>
+                            {
+                                layers.map((layer, index) => (
                                     <div className=' my-2 ' key={index}>
                                         <a href="#" className="list-group-item list-group-item-action list-group-item-primary d-flex justify-content-between show-field"><span><input className="form-check-input" type="radio" name="flexRadioDefault" id={index} onChange={(e) => checkLayer(e.target.checked, index, layer)}></input> {layer}</span> <span><FontAwesomeIcon icon={faTrash} className="inner-fw-delete" onClick={() => deleteLayer(index)} /> </span></a>
                                     </div>
-                                )
-                            })
-                        }
+                                ))
+                            }
+                        </ReactDragListView>
+                        
                     </div>
 
                     <div className=' p-3 d-flex justify-content-between'>

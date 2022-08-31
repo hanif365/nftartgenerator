@@ -23,11 +23,13 @@ const Home = () => {
     const [allLayers, setAllLayers] = useContext(ALLLayerContext);
     const [selectedLayer, setSelectedLayer] = useContext(LayerContext);
     const [rarityModalShow,setRarityModalShow] = useState(false) 
-    const [values, setValues] = useState([])
+    const [jsonfiles, setJsonfiles] = useState([])
     const [rarities, setRarities] = useState([])
     const [number, setNumber] = useState(1)
     const [reload, setReload] = useState(false);
     const [reloadCombine, setReloadCombine] = useState(false);
+    const [projectname, setProjectname] = useState('')
+    const [description, setDescription] = useState('')
 
     const [images, setImages] = useState([]);
     const maxNumber = 100;
@@ -92,53 +94,7 @@ const Home = () => {
                 obj1[item] = temp
                 arr.push(obj1)
             })
-
         })
-
-        // db.collection('Skin').get().then(allLayer => {
-        //     setLayer0(allLayer[allLayer.length - 1].newImageGroup)
-        //     let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
-        //     arr1.push({
-        //         'Skin': temp1
-        //     })
-        //     let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
-        //     arr.push({
-        //         'Skin': temp
-        //     })
-        // })
-        // db.collection('Shirts').get().then(allLayer => {
-        //     setLayer1(allLayer[allLayer.length - 1].newImageGroup)
-        //     let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
-        //     arr1.push({
-        //         'Shirts': temp1
-        //     })
-        //     let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
-        //     arr.push({
-        //         'Shirts': temp
-        //     })
-        // })
-        // db.collection('Mouth').get().then(allLayer => {
-        //     setLayer2(allLayer[allLayer.length - 1].newImageGroup)
-        //     let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
-        //     arr1.push({
-        //         'Mouth': temp1
-        //     })
-        //     let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
-        //     arr.push({
-        //         'Mouth': temp
-        //     })
-        // })
-        // db.collection('Eyes').get().then(allLayer => {
-        //     setLayer3(allLayer[allLayer.length - 1].newImageGroup)
-        //     let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
-        //     arr1.push({
-        //         'Eyes': temp1
-        //     })
-        //     let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
-        //     arr.push({
-        //         'Eyes': temp
-        //     })
-        // })
 
         setRarities(arr)
         setLayerValue(arr1)
@@ -164,12 +120,15 @@ const Home = () => {
         if (!number) alert("input number")
 
         let arr = []
+        let files = []
 
         for (let j = 0; j < number; j++) {
             let temp = []
+            let objarr = []
             allLayers.map(layer => {
                 for (let i = 0; i < layerValue.length; i++) {
                     if (layerValue[i][layer]) {
+                        let obj = {}
                         let total = rarities.find(item => item[layer])[layer].reduce((x, y) => parseInt(x) + parseInt(y))
                         let rarityitem = rarities.find(item => item[layer])
                         let newarr = []
@@ -177,6 +136,9 @@ const Home = () => {
                             newarr.push(rarityitem[layer][i] / total)
                         }
                         let random = getRandom(newarr)
+                        obj['trait_type'] = layer
+                        obj['value'] = layerValue[i][layer][0][random - 1].file.name.split('.')[0]
+                        objarr.push(obj)
                         temp.push(layerValue[i][layer][0][random - 1].data_url)
                     }
                 }
@@ -193,13 +155,21 @@ const Home = () => {
             //     let random = getRandom(newarr)
             //     temp.push(item[key][0][random - 1].data_url)
             // })
-            console.log(temp)
 
             mergeImages(temp)
                 .then((b64) => {
                     arr.push(b64)
-                    console.log(arr)
                     setcombineimages(arr)
+                    let jsonobj = {}
+                    jsonobj['attributes'] = objarr
+                    jsonobj['image'] = `${j}.jpg`
+                    if(projectname)
+                        jsonobj['name'] = projectname
+                    if(description)
+                        jsonobj['description'] = description
+                    files.push(jsonobj)
+                    console.log(files)
+                    setJsonfiles(files)
                 })
                 .catch(error => console.log(error))
         }
@@ -208,18 +178,17 @@ const Home = () => {
     // code for make download nft as zip format
     const download = async () => {
         var img = zip.folder("images");
+        var json = zip.folder("json");
 
         for (let i = 0; i < combined.length; i++) {
-            console.log(combined[i]);
             const dataFileArr = combined[i].split(",");
-            console.log(dataFileArr);
 
             const dataFile = dataFileArr[1]
-            console.log(dataFile);
+
+            const textFile = new Blob([JSON.stringify(jsonfiles[i])], {type: 'text/plain'});
 
             img.file(`${i}.png`, dataFile, { base64: true });
-
-            // saveAs(combined[i], `${i}.jpg`) // Put your image url here.
+            json.file(`${i}.json`, textFile, { base64: true })
         }
 
         zip.generateAsync({ type: "blob" }).then(function (content) {
@@ -288,7 +257,17 @@ const Home = () => {
                   
                 </div>
                 <div className="col-md-3 py-5 px-5">
-                    <div className='row py-3'>
+                    <div className='row'>
+                        <div className='col-12 py-1'>
+                            <input className='w-100 h-100' placeholder='Project Name' type="text" value={projectname} onChange={e => setProjectname(e.target.value)}></input>  
+                        </div>
+                    </div>
+                    <div className='row'>
+                        <div className='col-12 py-1'>
+                            <input className='w-100 h-100' placeholder='Description' type="text" value={description} onChange={e => setDescription(e.target.value)}></input>  
+                        </div>
+                    </div>
+                    <div className='row py-1'>
                         <div className='col-6'>
                             <input className='w-100 h-100' type="number" value={number} onChange={e => setNumber(e.target.value)}></input>  
                         </div>
@@ -329,7 +308,7 @@ const Home = () => {
                 size="lg"
                 centered>
                     <Modal.Header closeButton closeVariant='black' style={{ height: "70px" }}>
-                        <Modal.Title>Rarity Settings</Modal.Title>
+                        <Modal.Title>Rarity Settings ({selectedLayer})</Modal.Title>
                     </Modal.Header>
                     <Modal.Body style={{ marginTop: "-10px" }}>
                         <Container>
