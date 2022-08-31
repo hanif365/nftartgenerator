@@ -29,10 +29,6 @@ const Layers = () => {
 
     // Add layers
     const addLayer = () => {
-        console.log("Input Data: ", inputData);
-        console.log("Layers: ", layers);
-
-        // Check if duplicate layers in the list. Duplicate layers can't be added.
         const duplicate = layers.includes(inputData);
         console.log(duplicate);
 
@@ -108,7 +104,7 @@ const Layers = () => {
                             {
                                 layers?
                                 layers.map((layer, index) => (
-                                    <div className=' my-2 ' key={index}>
+                                    <div className='my-2' key={index}>
                                         <a href="#" className="list-group-item list-group-item-action list-group-item-primary d-flex justify-content-between show-field"><span><input className="form-check-input" type="radio" name="flexRadioDefault" id={index} onChange={(e) => checkLayer(e.target.checked, index, layer)}></input> {layer}</span> <span><FontAwesomeIcon icon={faTrash} className="inner-fw-delete" onClick={() => deleteLayer(index)} /> </span></a>
                                     </div>
                                 )):

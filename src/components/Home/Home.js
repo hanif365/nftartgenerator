@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import MultiSlider from '../Multislider';
 import { AiFillCloseCircle } from "react-icons/ai";
-
+import LinearProgress from '@mui/material/LinearProgress';
 import Modal from "react-bootstrap/Modal";
 import { Container, Row, Col } from "react-bootstrap"
 
@@ -23,6 +23,7 @@ const Home = () => {
     const [allLayers, setAllLayers] = useContext(ALLLayerContext);
     const [selectedLayer, setSelectedLayer] = useContext(LayerContext);
     const [rarityModalShow,setRarityModalShow] = useState(false) 
+    const [progressModalShow, setProgressModalShow] = useState(false)
     const [jsonfiles, setJsonfiles] = useState([])
     const [rarities, setRarities] = useState([])
     const [number, setNumber] = useState(1)
@@ -30,12 +31,13 @@ const Home = () => {
     const [reloadCombine, setReloadCombine] = useState(false);
     const [projectname, setProjectname] = useState('')
     const [description, setDescription] = useState('')
-
+    const [progressStatu, setProgressStatu] = useState(0)
     const [images, setImages] = useState([]);
     const maxNumber = 100;
     const [combined, setcombineimages] = useState([]);
 
     const modalclose = () => { setRarityModalShow(false) }
+    const progressModalclose = () => { setProgressModalShow(false) }
 
     const sendvalue = (index, data) => {
         console.log(index, data)
@@ -115,17 +117,18 @@ const Home = () => {
         return lastIndex + 1;
     };
 
-    const combine = () => {
+    const combine = async () => {
         console.log(allLayers)
         if (!number) alert("input number")
 
         let arr = []
         let files = []
-
+        setProgressModalShow(true)
         for (let j = 0; j < number; j++) {
+            setProgressStatu(j)
             let temp = []
             let objarr = []
-            allLayers.map(layer => {
+            await allLayers.map(layer => {
                 for (let i = 0; i < layerValue.length; i++) {
                     if (layerValue[i][layer]) {
                         let obj = {}
@@ -144,19 +147,7 @@ const Home = () => {
                 }
             })
 
-            // layerValue.map(item=>{
-            //     let key = Object.keys(item)[0]
-            //     let total = rarities.find(item => item[key])[key].reduce((x, y) => parseInt(x) + parseInt(y))
-            //     let rarityitem = rarities.find(item => item[key])
-            //     let newarr = []
-            //     for(let i = 0; i <rarityitem[key].length; i++ ){
-            //         newarr.push(rarityitem[key][i] / total)
-            //     }
-            //     let random = getRandom(newarr)
-            //     temp.push(item[key][0][random - 1].data_url)
-            // })
-
-            mergeImages(temp)
+            await mergeImages(temp)
                 .then((b64) => {
                     arr.push(b64)
                     setcombineimages(arr)
@@ -168,11 +159,11 @@ const Home = () => {
                     if(description)
                         jsonobj['description'] = description
                     files.push(jsonobj)
-                    console.log(files)
                     setJsonfiles(files)
                 })
                 .catch(error => console.log(error))
         }
+        setProgressModalShow(false)
     }
 
     // code for make download nft as zip format
@@ -313,6 +304,25 @@ const Home = () => {
                     <Modal.Body style={{ marginTop: "-10px" }}>
                         <Container>
                             <MultiSlider Items={images} sendValues={sendvalue} layername={selectedLayer} values={rarities.find(item => item[selectedLayer])} />
+                        </Container>
+                    </Modal.Body>
+                </Modal>
+
+                <Modal
+                dialogClassName="modala"
+                show={progressModalShow}
+                // show={true}
+                backdrop="static"
+                keyboard={false}
+                size="md"
+                centered>
+                    <Modal.Header closeVariant='black' style={{ height: "70px" }}>
+                        <Modal.Title>In progress</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body style={{ marginTop: "-10px" }}>
+                        <Container>
+                            <div>{progressStatu} out of {number}</div>
+                            <LinearProgress />
                         </Container>
                     </Modal.Body>
                 </Modal>
