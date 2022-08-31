@@ -71,9 +71,6 @@ const Layers = () => {
 
     // Complete layers
     const checkLayer = (checkedOrNot, id, layer) => {
-        console.log("Complete layers: ", checkedOrNot);
-        console.log("Complete layers ID : ", id);
-        console.log(layer);
         setSelectedLayer(layer);
     }
 
@@ -84,12 +81,11 @@ const Layers = () => {
 
     const dragProps = {
         onDragEnd(fromIndex, toIndex) {
-            const data = layers;
+            const data = [...layers];
             const item = data.splice(fromIndex, 1)[0];
             data.splice(toIndex, 0, item);
             console.log(data)
             setLayers(data)
-            console.log(layers)
         },
         nodeSelector: 'div',
         handleSelector:'a'
@@ -110,11 +106,13 @@ const Layers = () => {
                     <div className='px-3'>
                         <ReactDragListView {...dragProps}>
                             {
+                                layers?
                                 layers.map((layer, index) => (
                                     <div className=' my-2 ' key={index}>
                                         <a href="#" className="list-group-item list-group-item-action list-group-item-primary d-flex justify-content-between show-field"><span><input className="form-check-input" type="radio" name="flexRadioDefault" id={index} onChange={(e) => checkLayer(e.target.checked, index, layer)}></input> {layer}</span> <span><FontAwesomeIcon icon={faTrash} className="inner-fw-delete" onClick={() => deleteLayer(index)} /> </span></a>
                                     </div>
-                                ))
+                                )):
+                                <></>
                             }
                         </ReactDragListView>
                         
