@@ -1,3 +1,4 @@
+import React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import ImageUploading from 'react-images-uploading';
 import mergeImages from 'merge-images';
