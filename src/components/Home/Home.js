@@ -23,7 +23,7 @@ var zip = require('jszip')();
 const Home = () => {
     const [allLayers, setAllLayers] = useContext(ALLLayerContext);
     const [selectedLayer, setSelectedLayer] = useContext(LayerContext);
-    const [rarityModalShow,setRarityModalShow] = useState(false) 
+    const [rarityModalShow, setRarityModalShow] = useState(false)
     const [progressModalShow, setProgressModalShow] = useState(false)
     const [jsonfiles, setJsonfiles] = useState([])
     const [rarities, setRarities] = useState([])
@@ -88,14 +88,27 @@ const Home = () => {
         allLayers.map(item => {
 
             db.collection(item).get().then(allLayer => {
-                let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
-                let obj = {}
-                obj[item] = temp1
-                arr1.push(obj)
-                let obj1 = {}
-                let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
-                obj1[item] = temp
-                arr.push(obj1)
+                // console.log(allLayer);
+                // condition for empty images of layer
+                if (allLayer.length != 0) {
+                    let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
+                    let obj = {}
+                    obj[item] = temp1
+                    arr1.push(obj)
+                    let obj1 = {}
+                    let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
+                    obj1[item] = temp
+                    arr.push(obj1)
+                }
+
+                // let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
+                // let obj = {}
+                // obj[item] = temp1
+                // arr1.push(obj)
+                // let obj1 = {}
+                // let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
+                // obj1[item] = temp
+                // arr.push(obj1)
             })
         })
 
@@ -155,9 +168,9 @@ const Home = () => {
                     let jsonobj = {}
                     jsonobj['attributes'] = objarr
                     jsonobj['image'] = `${j}.jpg`
-                    if(projectname)
+                    if (projectname)
                         jsonobj['name'] = projectname
-                    if(description)
+                    if (description)
                         jsonobj['description'] = description
                     files.push(jsonobj)
                     setJsonfiles(files)
@@ -177,7 +190,7 @@ const Home = () => {
 
             const dataFile = dataFileArr[1]
 
-            const textFile = new Blob([JSON.stringify(jsonfiles[i])], {type: 'text/plain'});
+            const textFile = new Blob([JSON.stringify(jsonfiles[i])], { type: 'text/plain' });
 
             img.file(`${i}.jpg`, dataFile, { base64: true });
             json.file(`${i}.json`, textFile, { base64: true })
@@ -233,8 +246,8 @@ const Home = () => {
                                         {images && images.map((image, index) => (
                                             <div key={index} class="card image-card">
                                                 <img src={image['data_url']} class="card-img-top" alt="..." />
-                                                    <div class="card-text">{image['file']['name']}</div>
-                                                    <div className='positionabsolute' onClick={() => onImageRemove(index)}><AiFillCloseCircle/></div>
+                                                <div class="card-text">{image['file']['name']}</div>
+                                                <div className='positionabsolute' onClick={() => onImageRemove(index)}><AiFillCloseCircle /></div>
                                             </div>
 
                                         ))}
@@ -246,22 +259,22 @@ const Home = () => {
                             )}
                         </ImageUploading>
                     </div>
-                  
+
                 </div>
                 <div className="col-md-3 py-5 px-5">
                     <div className='row'>
                         <div className='col-12 py-1'>
-                            <input className='w-100 h-100' placeholder='Project Name' type="text" value={projectname} onChange={e => setProjectname(e.target.value)}></input>  
+                            <input className='w-100 h-100' placeholder='Project Name' type="text" value={projectname} onChange={e => setProjectname(e.target.value)}></input>
                         </div>
                     </div>
                     <div className='row'>
                         <div className='col-12 py-1'>
-                            <input className='w-100 h-100' placeholder='Description' type="text" value={description} onChange={e => setDescription(e.target.value)}></input>  
+                            <input className='w-100 h-100' placeholder='Description' type="text" value={description} onChange={e => setDescription(e.target.value)}></input>
                         </div>
                     </div>
                     <div className='row py-1'>
                         <div className='col-6'>
-                            <input className='w-100 h-100' type="number" value={number} onChange={e => setNumber(e.target.value)}></input>  
+                            <input className='w-100 h-100' type="number" value={number} onChange={e => setNumber(e.target.value)}></input>
                         </div>
                         <div className='col-6'>
                             <button className='btn btn-success' onClick={combine} onMouseEnter={() => setReloadCombine(true)}> combine</button>
@@ -291,7 +304,7 @@ const Home = () => {
                 </div>
             </div>
 
-                <Modal
+            <Modal
                 dialogClassName="modala"
                 show={rarityModalShow}
                 onHide={modalclose}
@@ -299,17 +312,17 @@ const Home = () => {
                 keyboard={false}
                 size="lg"
                 centered>
-                    <Modal.Header closeButton closeVariant='black' style={{ height: "70px" }}>
-                        <Modal.Title>Rarity Settings ({selectedLayer})</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body style={{ marginTop: "-10px" }}>
-                        <Container>
-                            <MultiSlider Items={images} sendValues={sendvalue} layername={selectedLayer} values={rarities.find(item => item[selectedLayer])} />
-                        </Container>
-                    </Modal.Body>
-                </Modal>
+                <Modal.Header closeButton closeVariant='black' style={{ height: "70px" }}>
+                    <Modal.Title>Rarity Settings ({selectedLayer})</Modal.Title>
+                </Modal.Header>
+                <Modal.Body style={{ marginTop: "-10px" }}>
+                    <Container>
+                        <MultiSlider Items={images} sendValues={sendvalue} layername={selectedLayer} values={rarities.find(item => item[selectedLayer])} />
+                    </Container>
+                </Modal.Body>
+            </Modal>
 
-                <Modal
+            <Modal
                 dialogClassName="modala"
                 show={progressModalShow}
                 // show={true}
@@ -317,20 +330,20 @@ const Home = () => {
                 keyboard={false}
                 size="md"
                 centered>
-                    <Modal.Header closeVariant='black' style={{ height: "70px" }}>
-                        <Modal.Title>In progress</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body style={{ marginTop: "-10px" }}>
-                        <Container>
-                            <div>{progressStatu} out of {number}</div>
-                            <LinearProgress />
-                        </Container>
-                    </Modal.Body>
-                </Modal>
+                <Modal.Header closeVariant='black' style={{ height: "70px" }}>
+                    <Modal.Title>In progress</Modal.Title>
+                </Modal.Header>
+                <Modal.Body style={{ marginTop: "-10px" }}>
+                    <Container>
+                        <div>{progressStatu} out of {number}</div>
+                        <LinearProgress />
+                    </Container>
+                </Modal.Body>
+            </Modal>
 
-            </div >
+        </div >
 
-            
+
     );
 };
 
