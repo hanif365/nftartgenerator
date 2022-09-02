@@ -178,7 +178,7 @@ const Home = () => {
 
             const textFile = new Blob([JSON.stringify(jsonfiles[i])], {type: 'text/plain'});
 
-            img.file(`${i}.png`, dataFile, { base64: true });
+            img.file(`${i}.jpg`, dataFile, { base64: true });
             json.file(`${i}.json`, textFile, { base64: true })
         }
 
