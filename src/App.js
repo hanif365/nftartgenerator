@@ -13,7 +13,8 @@ export const LayerContext = createContext();
 
 const App = () => {
   const [allLayers, setAllLayers] = useState([]);
-  const [selectedLayer, setSelectedLayer] = useState('Background');
+  // const [selectedLayer, setSelectedLayer] = useState('Background');
+  const [selectedLayer, setSelectedLayer] = useState('checking');
 
 
   return (

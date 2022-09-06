@@ -4,6 +4,8 @@ import ReactDragListView from 'react-drag-listview';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenToSquare, faSquarePlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { ALLLayerContext, LayerContext } from '../../App';
+import refreshLogo from '../../assets/refresh_logo.png';
+import mintdropzLogo from '../../assets/mintdropz_logo.png';
 
 
 // Get Data from Local Storage
@@ -84,42 +86,50 @@ const Layers = () => {
             setLayers(data)
         },
         nodeSelector: 'div',
-        handleSelector:'a'
-      };
-  
-    
-    return (
-        <div className='container-fluid py-5 todoContainer'>
-            <div className="">
-                <div className=" bg-light py-5">
-                    <p className='add-layer-p'>Add Layer</p>
-                    <div className='d-flex px-3 '>
-                        
-                        <input type="text" className="form-control me-3 inputField" placeholder='Add Layer' value={inputData} onChange={(e) => setInputData(e.target.value)} />
-                        <FontAwesomeIcon icon={faSquarePlus} className='addBtn' onClick={() => addLayer()} />
-                    </div>
+        handleSelector: 'a'
+    };
 
-                    <div className='px-3'>
-                        <ReactDragListView {...dragProps}>
-                            {
-                                layers?
+
+    return (
+        <div className=' py-5'>
+            <div className="layer_container py-3">
+                <p className='add-layer-p'>Add Layer</p>
+                <div className='d-flex px-3 '>
+
+                    <input type="text" className="form-control me-3 inputField" placeholder='Add Layer' value={inputData} onChange={(e) => setInputData(e.target.value)} />
+                    <FontAwesomeIcon icon={faSquarePlus} className='addBtn' onClick={() => addLayer()} />
+                </div>
+
+                <div className='px-3'>
+                    <ReactDragListView {...dragProps}>
+                        {
+                            layers ?
                                 layers.map((layer, index) => (
                                     <div className='my-2' key={index}>
                                         <a href="#" className="list-group-item list-group-item-action list-group-item-primary d-flex justify-content-between show-field"><span><input className="form-check-input" type="radio" name="flexRadioDefault" id={index} onChange={(e) => checkLayer(e.target.checked, index, layer)}></input> {layer}</span> <span><FontAwesomeIcon icon={faTrash} className="inner-fw-delete" onClick={() => deleteLayer(index)} /> </span></a>
                                     </div>
-                                )):
+                                )) :
                                 <></>
-                            }
-                        </ReactDragListView>
-                        
-                    </div>
+                        }
+                    </ReactDragListView>
 
-                    <div className=' p-3 d-flex justify-content-between'>
-                        <button className='btn btn-danger' onClick={clearAllLayer}>Clear All Layer</button>
+                </div>
+
+                <div className=' p-3 d-flex justify-content-between'>
+                    <button className='btn btn-danger' onClick={clearAllLayer}>Clear All Layer</button>
+                </div>
+
+                <div>
+                    <div className='update_div'>
+                        <h6>Update</h6>
+                        <img className='refreshLogo' src={refreshLogo} alt="" />
+                    </div>
+                    <div className='mintdropz_div'>
+                        <img className='mintdropzLogo ' src={mintdropzLogo} alt="" />
+                        <p className=''>2022 - Powered by Mintdropz</p>
                     </div>
                 </div>
             </div>
-
         </div>
     );
 };

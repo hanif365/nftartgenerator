@@ -1,9 +1,34 @@
 .addBtn {
     height: 50px;
     color: #ADAEE1;
+    cursor: pointer;
     /* background-color: aqua; */
 }
 .add-layer-p{
-    text-align: center;
     font-weight: 700;
+    margin: 0 0 10px 20px;
+}
+.layer_container{
+    background-color: #fff;
+}
+.update_div{
+    display: flex;
+    justify-content: space-between;
+    margin: 100px 20px 20px 20px;
+}
+.refreshLogo{
+    width: 15px;
+    height: 15px;
+    margin: 5px 0 0 0;
+    cursor: pointer;
+}
+.mintdropz_div{
+    display: flex;
+    justify-content: space-between;
+    margin: 0 20px;
+}
+.mintdropzLogo{
+    width: 20px;
+    height: 30px;
+    margin: -5px 0px 0 0;
 }

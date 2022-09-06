@@ -36,6 +36,7 @@ const Home = () => {
     const [images, setImages] = useState([]);
     const maxNumber = 100;
     const [combined, setcombineimages] = useState([]);
+    const [previewImg, setPreviewImg] = useState([]);
 
     const modalclose = () => { setRarityModalShow(false) }
     const progressModalclose = () => { setProgressModalShow(false) }
@@ -100,15 +101,6 @@ const Home = () => {
                     obj1[item] = temp
                     arr.push(obj1)
                 }
-
-                // let temp1 = new Array(allLayer[allLayer.length - 1].newImageGroup)
-                // let obj = {}
-                // obj[item] = temp1
-                // arr1.push(obj)
-                // let obj1 = {}
-                // let temp = new Array(allLayer[allLayer.length - 1].newImageGroup.length).fill(50)
-                // obj1[item] = temp
-                // arr.push(obj1)
             })
         })
 
@@ -180,6 +172,58 @@ const Home = () => {
         setProgressModalShow(false)
     }
 
+    // code for preview just one NFT
+    const preview = async () => {
+        console.log(allLayers)
+        // if (!number) alert("input number")
+
+        let arr = []
+        let files = []
+        // setProgressModalShow(true)
+        // for (let j = 0; j < number; j++) {
+        for (let j = 0; j < 1; j++) {
+            setProgressStatu(j)
+            let temp = []
+            let objarr = []
+            await allLayers.map(layer => {
+                for (let i = 0; i < layerValue.length; i++) {
+                    if (layerValue[i][layer]) {
+                        let obj = {}
+                        let total = rarities.find(item => item[layer])[layer].reduce((x, y) => parseInt(x) + parseInt(y))
+                        let rarityitem = rarities.find(item => item[layer])
+                        let newarr = []
+                        for (let i = 0; i < rarityitem[layer].length; i++) {
+                            newarr.push(rarityitem[layer][i] / total)
+                        }
+                        let random = getRandom(newarr)
+                        obj['trait_type'] = layer
+                        obj['value'] = layerValue[i][layer][0][random - 1].file.name.split('.')[0]
+                        objarr.push(obj)
+                        temp.push(layerValue[i][layer][0][random - 1].data_url)
+                    }
+                }
+            })
+
+            await mergeImages(temp)
+                .then((b64) => {
+                    arr.push(b64)
+                    // setcombineimages(arr[0])
+                    setPreviewImg(arr[0])
+                    let jsonobj = {}
+                    jsonobj['attributes'] = objarr
+                    jsonobj['image'] = `${j}.jpg`
+                    if (projectname)
+                        jsonobj['name'] = projectname
+                    if (description)
+                        jsonobj['description'] = description
+                    files.push(jsonobj)
+                    setJsonfiles(files)
+                })
+                .catch(error => console.log(error))
+        }
+        setProgressModalShow(false)
+    }
+
     // code for make download nft as zip format
     const download = async () => {
         var img = zip.folder("images");
@@ -209,12 +253,84 @@ const Home = () => {
     return (
         <div className="App-container">
             <div className="row">
-                <div className="col-md-3">
+                <div className="col-md-2">
                     <Layers></Layers>
                 </div>
-                <div className="col-md-6 bg-light my-5">
-                    <div className='upload-layer-images-div text-center py-5'>
-                        <h2>Upload your layer images</h2>
+                <div className="col-md-3 upload_img_div my-5">
+                    <div className='nft_des_div'>
+                        <h4 className='text-studio '>Studio</h4>
+                        <hr className='hr' />
+                        {/*  */}
+                        <label className='mx-2' htmlFor="NFT_Name">NFT Name</label>
+                        <div className='row'>
+                            <div className='col-12 py-1'>
+                                <input className='w-100 h-100 form-control NFT_Common_style' id="NFT_Name" placeholder='Mintdropz NFT' type="text" value={projectname} onChange={e => setProjectname(e.target.value)}></input>
+                            </div>
+                        </div>
+
+                        <div className='row py-3'>
+                            <div className='col-md-6'>
+                                <label className='mx-2' htmlFor="nftWidth">Width</label>
+                                <div className=' py-1'>
+                                    {/* <label htmlFor="">Width</label> */}
+                                    <input className='w-100 h-100 form-control NFT_Common_style' id="nftWidth" placeholder='70 Pixels' type="number"></input>
+                                </div>
+                            </div>
+
+                            <div className='col-md-6'>
+                                <label className='mx-2' htmlFor="nftHeight">Height</label>
+                                <div className=' py-1'>
+                                    {/* <label htmlFor="">Height</label> */}
+                                    <input className='w-100 h-100 form-control NFT_Common_style' id="nftHeight" placeholder='70 Pixels' type="number"></input>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className='row'>
+                            <div className='col-md-6'>
+                                <label className='mx-2' htmlFor="nftQuality">Quality</label>
+                                <select class="form-select NFT_Common_style" id='nftQuality'>
+                                    <option selected value="1">High</option>
+                                    <option value="2">Low</option>
+                                </select>
+                            </div>
+
+                            <div className='col-md-6'>
+                                <label className='mx-2' htmlFor="nftType">Type</label>
+                                <select class="form-select NFT_Common_style" id='nftType'>
+                                    <option selected value="1">PNG</option>
+                                    <option value="2">JPG</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* <div className='row'>
+                            <div className='col-12 pt-2'>
+                                <input className='w-100 h-100 form-control' placeholder='Description' type="text" value={description} onChange={e => setDescription(e.target.value)}></input>
+                            </div>
+                        </div> */}
+
+                        <div className='row pt-3'>
+                            {/* <label className='mx-2' htmlFor="nftNumber">Number of NFT</label>
+                            <div className='col-6'>
+                                <input className='w-100 h-100 form-control' type="number" id='nftNumber' value={number} onChange={e => setNumber(e.target.value)}></input>
+                            </div> */}
+                            {/* <div className='col-6'>
+                                <button className='btn btn-success' onClick={combine} onMouseEnter={() => setReloadCombine(true)}> Generate NFT</button>
+                            </div> */}
+                            <div className='col-12'>
+                                <button className='btn btn-success w-100' onClick={preview} onMouseEnter={() => setReloadCombine(true)}> Preview NFT</button>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            {/* <div className='col-6'>
+                                <button className='btn btn-danger' onClick={showmodal}>Rarity</button>
+                            </div> */}
+                        </div>
+                    </div>
+                    <div className='upload-layer-images-div text-center py-2'>
+                        <h6>Upload your {selectedLayer == 'checking' ? 'layer' : selectedLayer} images</h6>
                         <ImageUploading
                             multiple
                             value={images}
@@ -240,13 +356,13 @@ const Home = () => {
                                         {...dragProps}
                                     >
                                         {/* Click or Drop here */}
-                                        <FontAwesomeIcon icon={faCamera} className='addBtn' />
+                                        <FontAwesomeIcon icon={faCamera} className='addImgBtn' />
                                     </button>
                                     <div className="image-item margin-bottom">
                                         {images && images.map((image, index) => (
                                             <div key={index} class="card image-card">
                                                 <img src={image['data_url']} class="card-img-top" alt="..." />
-                                                <div class="card-text">{image['file']['name']}</div>
+                                                {/* <div class="card-text">{image['file']['name']}</div> */}
                                                 <div className='positionabsolute' onClick={() => onImageRemove(index)}><AiFillCloseCircle /></div>
                                             </div>
 
@@ -259,9 +375,21 @@ const Home = () => {
                             )}
                         </ImageUploading>
                     </div>
-
                 </div>
-                <div className="col-md-3 py-5 px-5">
+
+                <div className="col-md-4 show_preview_div mx-2 my-5">
+                    <div className='fixed-height show_preview_div_inner'>
+                        {
+                            combined ?
+                                <img className='preview_img hoverscale' width="100" src={previewImg}></img>
+                                :
+                                <></>
+                        }
+                        {/*  */}
+                    </div>
+                </div>
+
+                <div className="col-md-2 py-5">
                     <div className='row'>
                         <div className='col-12 py-1'>
                             <input className='w-100 h-100' placeholder='Project Name' type="text" value={projectname} onChange={e => setProjectname(e.target.value)}></input>
@@ -280,14 +408,14 @@ const Home = () => {
                             <button className='btn btn-success' onClick={combine} onMouseEnter={() => setReloadCombine(true)}> combine</button>
                         </div>
                     </div>
-                    <div className='previewtext'>
+                    {/* <div className='previewtext'>
                         Preview
-                    </div>
+                    </div> */}
                     <div className='fixed-height'>
                         {
                             combined ?
                                 combined.map(item => (
-                                    <img className='m-1 border border-1 border-primary hoverscale' width="100" src={item}></img>
+                                    <img className='m-1 border border-1 border-primary hoverscale' width="90" src={item}></img>
                                 ))
                                 :
                                 <></>
