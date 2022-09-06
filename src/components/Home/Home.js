@@ -11,7 +11,10 @@ import MultiSlider from '../Multislider';
 import { AiFillCloseCircle } from "react-icons/ai";
 import LinearProgress from '@mui/material/LinearProgress';
 import Modal from "react-bootstrap/Modal";
-import { Container, Row, Col } from "react-bootstrap"
+import { Container, Row, Col } from "react-bootstrap";
+
+import Tooltip from 'react-bootstrap/Tooltip';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 
 // indexedDB
 import Localbase from 'localbase';
@@ -50,6 +53,7 @@ const Home = () => {
         setRarities(array)
     }
 
+
     const [layerValue, setLayerValue] = useState([])
 
     const onChange = async (imageList, addUpdateIndex) => {
@@ -69,6 +73,10 @@ const Home = () => {
         await db.collection(selectedLayer).add({ newImageGroup })
 
         setReload(!reload);
+
+        // window.location.reload(false);
+        // reload function call
+        reloadPage();
     };
 
     useEffect(() => {
@@ -190,6 +198,9 @@ const Home = () => {
                     if (layerValue[i][layer]) {
                         let obj = {}
                         let total = rarities.find(item => item[layer])[layer].reduce((x, y) => parseInt(x) + parseInt(y))
+                        console.log(total);
+                        // if(total)
+
                         let rarityitem = rarities.find(item => item[layer])
                         let newarr = []
                         for (let i = 0; i < rarityitem[layer].length; i++) {
@@ -250,6 +261,17 @@ const Home = () => {
         setRarityModalShow(true)
     }
 
+    console.log(selectedLayer);
+
+    const reloadPage = () => {
+        setTimeout(() => {
+            window.location.reload(false);
+        }, 1000)
+    }
+
+    console.log("Images : ", images);
+
+
     return (
         <div className="App-container">
             <div className="row">
@@ -268,11 +290,10 @@ const Home = () => {
                             </div>
                         </div>
 
-                        <div className='row py-3'>
+                        {/* <div className='row py-3'>
                             <div className='col-md-6'>
                                 <label className='mx-2' htmlFor="nftWidth">Width</label>
                                 <div className=' py-1'>
-                                    {/* <label htmlFor="">Width</label> */}
                                     <input className='w-100 h-100 form-control NFT_Common_style' id="nftWidth" placeholder='70 Pixels' type="number"></input>
                                 </div>
                             </div>
@@ -280,13 +301,12 @@ const Home = () => {
                             <div className='col-md-6'>
                                 <label className='mx-2' htmlFor="nftHeight">Height</label>
                                 <div className=' py-1'>
-                                    {/* <label htmlFor="">Height</label> */}
                                     <input className='w-100 h-100 form-control NFT_Common_style' id="nftHeight" placeholder='70 Pixels' type="number"></input>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
 
-                        <div className='row'>
+                        {/* <div className='row'>
                             <div className='col-md-6'>
                                 <label className='mx-2' htmlFor="nftQuality">Quality</label>
                                 <select class="form-select NFT_Common_style" id='nftQuality'>
@@ -302,13 +322,13 @@ const Home = () => {
                                     <option value="2">JPG</option>
                                 </select>
                             </div>
-                        </div>
+                        </div> */}
 
-                        {/* <div className='row'>
+                        <div className='row'>
                             <div className='col-12 pt-2'>
                                 <input className='w-100 h-100 form-control' placeholder='Description' type="text" value={description} onChange={e => setDescription(e.target.value)}></input>
                             </div>
-                        </div> */}
+                        </div>
 
                         <div className='row pt-3'>
                             {/* <label className='mx-2' htmlFor="nftNumber">Number of NFT</label>
@@ -329,7 +349,7 @@ const Home = () => {
                             </div> */}
                         </div>
                     </div>
-                    <div className='upload-layer-images-div text-center py-2'>
+                    {selectedLayer != 'checking' ? <div className='upload-layer-images-div text-center py-2'>
                         <h6>Upload your {selectedLayer == 'checking' ? 'layer' : selectedLayer} images</h6>
                         <ImageUploading
                             multiple
@@ -353,6 +373,7 @@ const Home = () => {
                                         className='addLayerImgBtn'
                                         style={isDragging ? { color: 'red' } : undefined}
                                         onClick={onImageUpload}
+                                        // onMouseLeave={reloadPage}
                                         {...dragProps}
                                     >
                                         {/* Click or Drop here */}
@@ -368,13 +389,13 @@ const Home = () => {
 
                                         ))}
                                     </div>
-                                    <div className='my-5'>
+                                    {/* <div className='my-5'>
                                         {images && images.length ? <button className='btn btn-danger' onClick={onImageRemoveAll}>Remove all images</button> : ' '}
-                                    </div>
+                                    </div> */}
                                 </div>
                             )}
                         </ImageUploading>
-                    </div>
+                    </div> : ''}
                 </div>
 
                 <div className="col-md-4 show_preview_div mx-2 my-5">
@@ -390,7 +411,40 @@ const Home = () => {
                 </div>
 
                 <div className="col-md-2 py-5">
-                    <div className='row'>
+                    {/* rarity section start */}
+                    <div className='row py-5'>
+                        {/* <div className='col-6'>
+                            <button className='btn btn-info' onClick={download}> download</button>
+                        </div> */}
+                        {selectedLayer != 'checking' ?
+
+                            <div className='col-12'>
+                                <button className='btn btn-lg btn-success w-100' onClick={showmodal}>Rarity</button>
+                            </div> :
+
+                            // <div className='col-6'>
+                            //     <button className='btn btn-danger' disabled onClick={showmodal}>Rarity</button>
+                            // </div>
+
+                            <OverlayTrigger
+                                key='top'
+                                placement='top'
+                                overlay={
+                                    <Tooltip id='rarity'>
+                                        Select a layer before you can adjust rarity
+                                    </Tooltip>
+                                }
+                            >
+                                {/* <Button variant="success">Rarity</Button> */}
+                                <div className='col-12'>
+                                    <button className='btn btn-lg btn-success w-100'>Rarity</button>
+                                </div>
+                            </OverlayTrigger>
+                        }
+                    </div>
+                    {/* rarity section end */}
+
+                    {/* <div className='row'>
                         <div className='col-12 py-1'>
                             <input className='w-100 h-100' placeholder='Project Name' type="text" value={projectname} onChange={e => setProjectname(e.target.value)}></input>
                         </div>
@@ -399,13 +453,27 @@ const Home = () => {
                         <div className='col-12 py-1'>
                             <input className='w-100 h-100' placeholder='Description' type="text" value={description} onChange={e => setDescription(e.target.value)}></input>
                         </div>
-                    </div>
+                    </div> */}
                     <div className='row py-1'>
-                        <div className='col-6'>
-                            <input className='w-100 h-100' type="number" value={number} onChange={e => setNumber(e.target.value)}></input>
+                        <h4>Generate NFT</h4>
+                        <div className='col-12'>
+                            <OverlayTrigger
+                                key='top'
+                                placement='top'
+                                overlay={
+                                    <Tooltip id='number_of_nft_gen'>
+                                        Number of NFT want to generate
+                                    </Tooltip>
+                                }
+                            >
+                                {/* <Button variant="success">Rarity</Button> */}
+                                <div className='col-12'>
+                                    <input className='input_nft_num' type="number" value={number} onChange={e => setNumber(e.target.value)}></input>
+                                </div>
+                            </OverlayTrigger>
                         </div>
-                        <div className='col-6'>
-                            <button className='btn btn-success' onClick={combine} onMouseEnter={() => setReloadCombine(true)}> combine</button>
+                        <div className='col-12 my-2'>
+                            <button className='btn btn-lg btn-success w-100' onClick={combine} onMouseEnter={() => setReloadCombine(true)}>Generate</button>
                         </div>
                     </div>
                     {/* <div className='previewtext'>
@@ -421,14 +489,7 @@ const Home = () => {
                                 <></>
                         }
                     </div>
-                    <div className='row'>
-                        <div className='col-6'>
-                            <button className='btn btn-info' onClick={download}> download</button>
-                        </div>
-                        <div className='col-6'>
-                            <button className='btn btn-danger' onClick={showmodal}>Rarity</button>
-                        </div>
-                    </div>
+
                 </div>
             </div>
 

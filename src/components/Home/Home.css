@@ -23,7 +23,7 @@
     border-left-style: none;
     border-right-style: none;
     border-top-style: none;
-    
+
 }
 
 .addLayerImgBtn {
@@ -108,19 +108,27 @@
 .positionabsolute:active {
     color: rgb(248, 0, 0);
 }
-label{
+
+label {
     font-weight: 700;
 }
 
 /* preview div */
-.show_preview_div{
+.show_preview_div {
     background-color: #fff;
 }
-.show_preview_div_inner{
+
+.show_preview_div_inner {
     background-color: #ADAEE1;
     margin: 50px 0;
     border-radius: 10px;
 }
-.preview_img{
+
+.preview_img {
     width: 100%;
+}
+.input_nft_num{
+    padding: 5px 10px;
+    width: 100%;
+    
 }

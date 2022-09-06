@@ -65,6 +65,7 @@ const Layers = () => {
     // Clear all layers
     const clearAllLayer = () => {
         setLayers([]);
+        removeIndexedDB();
     }
 
     // Complete layers
@@ -89,6 +90,16 @@ const Layers = () => {
         handleSelector: 'a'
     };
 
+    // removeIndexedDB
+    const removeIndexedDB = () => {
+        var req = indexedDB.deleteDatabase('nftArtDB');
+        req.onsuccess = function () {
+            console.log("Deleted database successfully");
+        };
+        window.location.reload(false);
+    }
+  
+
 
     return (
         <div className=' py-5'>
@@ -106,7 +117,7 @@ const Layers = () => {
                             layers ?
                                 layers.map((layer, index) => (
                                     <div className='my-2' key={index}>
-                                        <a href="#" className="list-group-item list-group-item-action list-group-item-primary d-flex justify-content-between show-field"><span><input className="form-check-input" type="radio" name="flexRadioDefault" id={index} onChange={(e) => checkLayer(e.target.checked, index, layer)}></input> {layer}</span> <span><FontAwesomeIcon icon={faTrash} className="inner-fw-delete" onClick={() => deleteLayer(index)} /> </span></a>
+                                        <a href="#" className="list-group-item list-group-item-action list-group-item-primary d-flex justify-content-between show-field"><span><input className="form-check-input" type="radio" name="flexRadioDefault" id={index} onChange={(e) => checkLayer(e.target.checked, index, layer)}></input> {layer}</span> <span className='d-none'><FontAwesomeIcon icon={faTrash} className="inner-fw-delete" onClick={() => deleteLayer(index)} /> </span></a>
                                     </div>
                                 )) :
                                 <></>
@@ -115,17 +126,18 @@ const Layers = () => {
 
                 </div>
 
-                <div className=' p-3 d-flex justify-content-between'>
+                {layers.length ? <div className=' p-3 d-flex justify-content-between'>
                     <button className='btn btn-danger' onClick={clearAllLayer}>Clear All Layer</button>
-                </div>
+                </div> : ''}
 
+                {/* <button onClick={removeIndexedDB}>Test</button> */}
                 <div>
-                    <div className='update_div'>
+                    {/* <div className='update_div'>
                         <h6>Update</h6>
                         <img className='refreshLogo' src={refreshLogo} alt="" />
-                    </div>
+                    </div> */}
                     <div className='mintdropz_div'>
-                        <img className='mintdropzLogo ' src={mintdropzLogo} alt="" />
+                        <img className='mintdropzLogo me-2' src={mintdropzLogo} alt="" />
                         <p className=''>2022 - Powered by Mintdropz</p>
                     </div>
                 </div>
