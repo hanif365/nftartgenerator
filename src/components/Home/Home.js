@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 
 // indexedDB
 import Localbase from 'localbase';
-import { ALLLayerContext, GeneratedNFTContext, LayerContext } from '../../App';
+import { ALLLayerContext, GeneratedNFTContext, GeneratedProjectName, GenerateJSONFileContext, LayerContext } from '../../App';
 let db = new Localbase('nftArtDB');
 
 var zip = require('jszip')();
@@ -29,6 +29,8 @@ const Home = () => {
     const [allLayers, setAllLayers] = useContext(ALLLayerContext);
     const [selectedLayer, setSelectedLayer] = useContext(LayerContext);
     const [generatedNFT, setGeneratedNFT] = useContext(GeneratedNFTContext);
+    const [generatedJSON, setGeneratedJSON] = useContext(GenerateJSONFileContext);
+    const [generatedProjectName, setGeneratedProjectName] = useContext(GeneratedProjectName);
     const [rarityModalShow, setRarityModalShow] = useState(false)
     const [progressModalShow, setProgressModalShow] = useState(false)
     const [jsonfiles, setJsonfiles] = useState([])
@@ -182,17 +184,20 @@ const Home = () => {
                         jsonobj['description'] = description
                     files.push(jsonobj)
                     setJsonfiles(files)
+
+                    // use for contextAPI
+                    setGeneratedJSON(files)
                 })
                 .catch(error => console.log(error))
         }
         setProgressModalShow(false)
 
-        
+
         history('/generate');
     }
 
     console.log(combined);
-    
+
 
     // code for preview just one NFT
     const preview = async () => {
@@ -250,25 +255,25 @@ const Home = () => {
     }
 
     // code for make download nft as zip format
-    const download = async () => {
-        var img = zip.folder("images");
-        var json = zip.folder("json");
+    // const download = async () => {
+    //     var img = zip.folder("images");
+    //     var json = zip.folder("json");
 
-        for (let i = 0; i < combined.length; i++) {
-            const dataFileArr = combined[i].split(",");
+    //     for (let i = 0; i < combined.length; i++) {
+    //         const dataFileArr = combined[i].split(",");
 
-            const dataFile = dataFileArr[1]
+    //         const dataFile = dataFileArr[1]
 
-            const textFile = new Blob([JSON.stringify(jsonfiles[i])], { type: 'text/plain' });
+    //         const textFile = new Blob([JSON.stringify(jsonfiles[i])], { type: 'text/plain' });
 
-            img.file(`${i}.jpg`, dataFile, { base64: true });
-            json.file(`${i}.json`, textFile, { base64: true })
-        }
+    //         img.file(`${i}.jpg`, dataFile, { base64: true });
+    //         json.file(`${i}.json`, textFile, { base64: true })
+    //     }
 
-        zip.generateAsync({ type: "blob" }).then(function (content) {
-            saveAs(content, "nft-art.zip");
-        });
-    }
+    //     zip.generateAsync({ type: "blob" }).then(function (content) {
+    //         saveAs(content, "nft-art.zip");
+    //     });
+    // }
 
     const showmodal = () => {
         console.log(allLayers.indexOf(selectedLayer), rarities, rarities[selectedLayer])
@@ -300,7 +305,7 @@ const Home = () => {
                         <label className='mx-2' htmlFor="NFT_Name">NFT Name</label>
                         <div className='row'>
                             <div className='col-12 py-1'>
-                                <input className='w-100 h-100 form-control NFT_Common_style' id="NFT_Name" placeholder='Mintdropz NFT' type="text" value={projectname} onChange={e => setProjectname(e.target.value)}></input>
+                                <input className='w-100 h-100 form-control NFT_Common_style' id="NFT_Name" placeholder='Mintdropz NFT' type="text" value={projectname} onChange={e => {setProjectname(e.target.value); setGeneratedProjectName(e.target.value)}}></input>
                             </div>
                         </div>
 
@@ -493,7 +498,7 @@ const Home = () => {
                     {/* <div className='previewtext'>
                         Preview
                     </div> */}
-                    
+
                     {/* <div className='fixed-height'>
                         {
                             combined ?

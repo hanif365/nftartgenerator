@@ -1,25 +1,25 @@
 .generate_container {
     background-color: #F2F2F2;
-    height: 100vh;
+    height: 100%;
 }
 
 .gen_nft {
     padding: 50px 0 0 0;
 }
-.generateNFTOuter{
-    /* background-color: #37b173; */
-    /* margin: 0 5px 0 0; */
-}
-.generateNFT_div{
+
+.generateNFT_div {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
 
 }
-.generateNFT{
+
+.nft_card {
     width: 200px;
-    height: 200px;
-    background-color: #ADAEE1;
     margin: 5px;
     border-radius: 10px;
+}
+
+.nft_img_card {
+    background-color: #ADAEE1;
 }

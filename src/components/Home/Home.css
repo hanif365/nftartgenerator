@@ -59,6 +59,7 @@
 .image-card {
     /* width: 9rem; */
     width: 5rem;
+    height: 5rem;
     background-color: #BACBE6;
     margin: 5px;
 }
