@@ -16,9 +16,11 @@ import { Container, Row, Col } from "react-bootstrap";
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 
+import { useNavigate } from 'react-router-dom';
+
 // indexedDB
 import Localbase from 'localbase';
-import { ALLLayerContext, LayerContext } from '../../App';
+import { ALLLayerContext, GeneratedNFTContext, LayerContext } from '../../App';
 let db = new Localbase('nftArtDB');
 
 var zip = require('jszip')();
@@ -26,6 +28,7 @@ var zip = require('jszip')();
 const Home = () => {
     const [allLayers, setAllLayers] = useContext(ALLLayerContext);
     const [selectedLayer, setSelectedLayer] = useContext(LayerContext);
+    const [generatedNFT, setGeneratedNFT] = useContext(GeneratedNFTContext);
     const [rarityModalShow, setRarityModalShow] = useState(false)
     const [progressModalShow, setProgressModalShow] = useState(false)
     const [jsonfiles, setJsonfiles] = useState([])
@@ -43,6 +46,8 @@ const Home = () => {
 
     const modalclose = () => { setRarityModalShow(false) }
     const progressModalclose = () => { setProgressModalShow(false) }
+
+    const history = useNavigate();
 
     const sendvalue = (index, data) => {
         console.log(index, data)
@@ -165,6 +170,9 @@ const Home = () => {
                 .then((b64) => {
                     arr.push(b64)
                     setcombineimages(arr)
+
+                    // use for contextAPI
+                    setGeneratedNFT(arr)
                     let jsonobj = {}
                     jsonobj['attributes'] = objarr
                     jsonobj['image'] = `${j}.jpg`
@@ -178,7 +186,13 @@ const Home = () => {
                 .catch(error => console.log(error))
         }
         setProgressModalShow(false)
+
+        
+        history('/generate');
     }
+
+    console.log(combined);
+    
 
     // code for preview just one NFT
     const preview = async () => {
@@ -274,7 +288,7 @@ const Home = () => {
 
     return (
         <div className="App-container">
-            <div className="row">
+            <div className="row App_container_inner">
                 <div className="col-md-2">
                     <Layers></Layers>
                 </div>
@@ -479,7 +493,8 @@ const Home = () => {
                     {/* <div className='previewtext'>
                         Preview
                     </div> */}
-                    <div className='fixed-height'>
+                    
+                    {/* <div className='fixed-height'>
                         {
                             combined ?
                                 combined.map(item => (
@@ -488,7 +503,7 @@ const Home = () => {
                                 :
                                 <></>
                         }
-                    </div>
+                    </div> */}
 
                 </div>
             </div>
@@ -520,7 +535,7 @@ const Home = () => {
                 size="md"
                 centered>
                 <Modal.Header closeVariant='black' style={{ height: "70px" }}>
-                    <Modal.Title>In progress</Modal.Title>
+                    <Modal.Title>Generating NFT, Please wait...</Modal.Title>
                 </Modal.Header>
                 <Modal.Body style={{ marginTop: "-10px" }}>
                     <Container>

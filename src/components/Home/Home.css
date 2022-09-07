@@ -1,6 +1,9 @@
 .App-container {
     background-color: #F2F2F2;
 }
+.App_container_inner{
+    margin: 0;
+}
 
 .upload_img_div {
     background-color: #fff;
