@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { GeneratedNFTContext, GeneratedProjectName, GenerateJSONFileContext } from '../../App';
 import './Generate.css';
 import { saveAs } from 'file-saver';
+import Navbar from '../Shared/Navbar/Navbar';
 
 var zip = require('jszip')();
 
@@ -37,6 +38,7 @@ const Generate = () => {
 
     return (
         <div className='generate_container'>
+            <Navbar></Navbar>
             <div className="container-fluid">
                 <div className="row gen_nft">
                     <div className="col-md-2 py-3">

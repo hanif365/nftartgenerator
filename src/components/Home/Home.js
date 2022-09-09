@@ -21,6 +21,7 @@ import { useNavigate } from 'react-router-dom';
 // indexedDB
 import Localbase from 'localbase';
 import { ALLLayerContext, GeneratedNFTContext, GeneratedProjectName, GenerateJSONFileContext, LayerContext } from '../../App';
+import Navbar from '../Shared/Navbar/Navbar';
 let db = new Localbase('nftArtDB');
 
 var zip = require('jszip')();
@@ -153,7 +154,15 @@ const Home = () => {
                 for (let i = 0; i < layerValue.length; i++) {
                     if (layerValue[i][layer]) {
                         let obj = {}
-                        let total = rarities.find(item => item[layer])[layer].reduce((x, y) => parseInt(x) + parseInt(y))
+                        // let total = rarities.find(item => item[layer])[layer].reduce((x, y) => parseInt(x) + parseInt(y))
+                        let total = rarities.find(item => item[layer])[layer].reduce((x, y) => parseInt(x) + parseInt(y), 0)
+
+                        console.log(total);
+                        // if we deleted all image of a layer then it shows an error. Used this logic to handle it.
+                        if (total == 0) {
+                            return
+                        }
+
                         let rarityitem = rarities.find(item => item[layer])
                         let newarr = []
                         for (let i = 0; i < rarityitem[layer].length; i++) {
@@ -216,9 +225,13 @@ const Home = () => {
                 for (let i = 0; i < layerValue.length; i++) {
                     if (layerValue[i][layer]) {
                         let obj = {}
-                        let total = rarities.find(item => item[layer])[layer].reduce((x, y) => parseInt(x) + parseInt(y))
+                        // let total = rarities.find(item => item[layer])[layer].reduce((x, y) => parseInt(x) + parseInt(y))
+                        let total = rarities.find(item => item[layer])[layer].reduce((x, y) => parseInt(x) + parseInt(y), 0)
                         console.log(total);
-                        // if(total)
+                        // if we deleted all image of a layer then it shows an error. Used this logic to handle it.
+                        if (total == 0) {
+                            return
+                        }
 
                         let rarityitem = rarities.find(item => item[layer])
                         let newarr = []
@@ -293,6 +306,7 @@ const Home = () => {
 
     return (
         <div className="App-container">
+            <Navbar></Navbar>
             <div className="row App_container_inner">
                 <div className="col-md-2">
                     <Layers></Layers>
@@ -305,7 +319,7 @@ const Home = () => {
                         <label className='mx-2' htmlFor="NFT_Name">NFT Name</label>
                         <div className='row'>
                             <div className='col-12 py-1'>
-                                <input className='w-100 h-100 form-control NFT_Common_style' id="NFT_Name" placeholder='Mintdropz NFT' type="text" value={projectname} onChange={e => {setProjectname(e.target.value); setGeneratedProjectName(e.target.value)}}></input>
+                                <input className='w-100 h-100 form-control NFT_Common_style' id="NFT_Name" placeholder='Mintdropz NFT' type="text" value={projectname} onChange={e => { setProjectname(e.target.value); setGeneratedProjectName(e.target.value) }}></input>
                             </div>
                         </div>
 

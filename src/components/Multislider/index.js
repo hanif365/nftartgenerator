@@ -15,7 +15,8 @@ function MultiSlider({ Items, sendValues, values, layername }) {
 
     useEffect(() => {
         setAdvancedValues(values[layername])
-        setTotalRange(values[layername].reduce((x, y) => parseInt(x) + parseInt(y)))
+        // setTotalRange(values[layername].reduce((x, y) => parseInt(x) + parseInt(y)))
+        setTotalRange(values[layername].reduce((x, y) => parseInt(x) + parseInt(y), 0))
     }, [])
 
     useEffect(() => {

@@ -15,6 +15,7 @@ const Navbar = () => {
                     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                         <div class="navbar-nav ms-auto">
                             <Link class="nav-link active" aria-current="page" to="/home">Home</Link>
+                            {/* <Link class="nav-link" aria-current="page" to="/landing">Landing</Link> */}
                             {/* <Link class="nav-link" to="/generate">Generate</Link> */}
                         </div>
                     </div>

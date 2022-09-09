@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import Generate from './components/Generate/Generate';
 import Home from './components/Home/Home';
+import LandingPage from './components/LandingPage/LandingPage';
 import Navbar from './components/Shared/Navbar/Navbar';
 
 export const ALLLayerContext = createContext();
@@ -34,13 +35,15 @@ const App = () => {
             <GenerateJSONFileContext.Provider value={[generatedJSON, setGeneratedJSON]}>
               <GeneratedProjectName.Provider value={[generatedProjectName, setGeneratedProjectName]}>
                 <BrowserRouter>
-                  <Navbar></Navbar>
+                  {/* <Navbar></Navbar> */}
                   <Routes>
                     <Route path="/" element={<Home />}>
                     </Route>
                     <Route path="/home" element={<Home />}>
                     </Route>
                     <Route path="/generate" element={<Generate />}>
+                    </Route>
+                    <Route path="/landing" element={<LandingPage />}>
                     </Route>
                   </Routes>
                 </BrowserRouter>
