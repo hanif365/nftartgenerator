@@ -1,7 +1,8 @@
 .App-container {
     background-color: #F2F2F2;
 }
-.App_container_inner{
+
+.App_container_inner {
     margin: 0;
 }
 
@@ -131,8 +132,13 @@ label {
 .preview_img {
     width: 100%;
 }
-.input_nft_num{
+
+.input_nft_num {
     padding: 5px 10px;
     width: 100%;
-    
+
+}
+
+.rarity_generate_div {
+    background-color: #fff;
 }

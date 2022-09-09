@@ -431,7 +431,7 @@ const Home = () => {
                     </div> : ''}
                 </div>
 
-                <div className="col-md-4 show_preview_div mx-2 my-5">
+                <div className="col-md-4 show_preview_div my-5">
                     <div className='fixed-height show_preview_div_inner'>
                         {
                             combined ?
@@ -443,7 +443,7 @@ const Home = () => {
                     </div>
                 </div>
 
-                <div className="col-md-2 py-5">
+                <div className="col-md-3 py-5 rarity_generate_div my-5">
                     {/* rarity section start */}
                     <div className='row py-5'>
                         {/* <div className='col-6'>

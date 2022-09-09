@@ -6,6 +6,7 @@ import { faPenToSquare, faSquarePlus, faTrash } from '@fortawesome/free-solid-sv
 import { ALLLayerContext, LayerContext } from '../../App';
 import refreshLogo from '../../assets/refresh_logo.png';
 import mintdropzLogo from '../../assets/mintdropz_logo.png';
+import mintdropzLogoBlack from '../../assets/Mintdropz_logo_black.png';
 
 
 // Get Data from Local Storage
@@ -136,9 +137,15 @@ const Layers = () => {
                         <h6>Update</h6>
                         <img className='refreshLogo' src={refreshLogo} alt="" />
                     </div> */}
-                    <div className='mintdropz_div'>
+                    {/* <div className='mintdropz_div'>
                         <img className='mintdropzLogo me-2' src={mintdropzLogo} alt="" />
                         <p className=''>2022 - Powered by Mintdropz</p>
+                    </div> */}
+
+                    <div className='powered_by'>
+                        <h5>Powered by</h5>
+                        <img src={mintdropzLogoBlack} alt="" className='mintdropzLogoBlack'/>
+                        <p className='mx-2 my-2'>&copy; 2022 Mintdropz All rights reserved</p>
                     </div>
                 </div>
             </div>
