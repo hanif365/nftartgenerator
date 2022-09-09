@@ -145,7 +145,7 @@ const Layers = () => {
                     <div className='powered_by'>
                         <h5>Powered by</h5>
                         <img src={mintdropzLogoBlack} alt="" className='mintdropzLogoBlack'/>
-                        <p className='mx-2 my-2'>&copy; 2022 Mintdropz All rights reserved</p>
+                        <p className='mx-2 my-2 text_copyright'>&copy; 2022 Mintdropz <br /> All rights reserved</p>
                     </div>
                 </div>
             </div>
